@@ -28,7 +28,7 @@ class CorrelationAPI(Resource):
         parser.add_argument('endDate', type=str)
         args = parser.parse_args()
         
-        conn = sqlite3.connect('static/data.db')
+        conn = sqlite3.connect('data/data.db')
         c = conn.cursor()
 
         data = c.execute("""
