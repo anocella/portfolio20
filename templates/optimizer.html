@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Site made with Mobirise Website Builder v3.12.1, https://mobirise.com -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v3.12.1, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="assets/images/mbr-192x128.jpg" type="image/x-icon">
+  <meta name="description" content="Performance Optimizer">
+  <title>Performance Optimizer</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="assets/bootstrap-material-design-font/css/material.css">
+  <link rel="stylesheet" href="assets/tether/tether.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/animate.css/animate.min.css">
+  <link rel="stylesheet" href="assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="assets/socicon/css/styles.css">
+  <link rel="stylesheet" href="assets/theme/css/style.css">
+  <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+  
+<style>
+
+.axis--x path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<script src="//d3js.org/d3.v4.min.js"></script>  
+  
+</head>
+<body>
+<section id="menu-g">
+
+    <nav class="navbar navbar-dropdown navbar-fixed-top">
+        <div class="container">
+
+            <div class="mbr-table">
+                <div class="mbr-table-cell">
+
+                    <div class="navbar-brand">
+                        <a href="https://mobirise.com" class="socicon socicon-paypal mbr-iconfont mbr-iconfont-menu navbar-logo"></a>
+                        <a class="navbar-caption" href="index.html">Portfolio 2.0</a>
+                    </div>
+
+                </div>
+                <div class="mbr-table-cell">
+
+                    <button class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                        <div class="hamburger-icon"></div>
+                    </button>
+
+                    <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar"><li class="nav-item"><a class="nav-link link" href="index.html">OVERVIEW</a></li><li class="nav-item dropdown"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="index.html" aria-expanded="false">FEATURES</a><div class="dropdown-menu"><a class="dropdown-item" href="correlation.html">Asset Correlation</a><a class="dropdown-item" href="performance.html">Portfolio Performance</a><a class="dropdown-item" href="optimizer.html">Portfolio Optimizer</a></div></li><li class="nav-item dropdown open"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="index.html" aria-expanded="true">HELP</a><div class="dropdown-menu"><a class="dropdown-item" href="contact.html">Contact us</a></div></li></ul>
+                    <button hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                        <div class="close-icon"></div>
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+</section>
+
+<section class="engine"><a rel="external" href="https://mobirise.com">Web Page Generator</a></section><section class="mbr-section mbr-section-hero mbr-section-full mbr-section-with-arrow mbr-after-navbar" id="header5-13" style="background-color: rgb(239, 239, 239);">
+
+    
+
+    <!-- <div class="mbr-table-cell"> -->
+
+        <div class="container">
+            <div class="row">
+                <div class="mbr-section col-md-10">
+					<p class="mbr-section-lead lead">Portfolio Optimizer</p>
+					<div class="row">
+						<div class="col-xs-2 col-md-2">
+						  <label for="startyear">Start Year</label>
+						  <select class="form-control" id="startyear">
+							<option>2013</option>
+						    <option>2014</option>
+						    <option>2015</option>
+						    <option>2016</option>
+						    <option>2017</option>
+						  </select>
+						</div>
+						<div class="col-xs-2 col-md-2">
+						  <label for="endyear">End Year</label>
+						  <select class="form-control" id="endyear">
+							<option>2013</option>
+						    <option>2014</option>
+						    <option>2015</option>
+						    <option>2016</option>
+						    <option>2017</option>
+						  </select>
+						</div>
+						<div class="col-xs-4 col-md-4">
+						  <label for="expectedreturn">Expected Return</label>
+						  <select class="form-control" id="expectedreturn">
+							<option>5%</option>
+						    <option>6%</option>
+						    <option>7%</option>
+						    <option>8%</option>
+						    <option>9%</option>
+							<option>10%</option>
+							<option>11%</option>
+							<option>12%</option>
+							<option>13%</option>
+						    <option>14%</option>
+						    <option>15%</option>
+						    <option>16%</option>
+							<option>17%</option>
+							<option>18%</option>
+							<option>19%</option>
+							<option>20%</option>
+						  </select>
+						</div>
+						<div class="col-xs-4 col-md-4">
+						  <label for="benchmark">Benchmark</label>
+						  <select class="form-control" id="benchmark">
+							<option>SP 500 Index</option>
+						    <option>Vanguard 500</option>
+						    <option>Select Others</option>
+						  </select>
+						</div>
+					</div>
+					
+					<br><br>
+					<h5>Allocation</h5>
+					<br>
+					<div class="row">
+					  <table class="table table-bordered">
+						<thead>
+						  <tr>
+							<th>Asset Ticker</th>
+							<th>Your Allocation</th>
+							<th>Optimized Allocation</th>
+							<th></th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td></td>
+						  </tr>
+						  <tr>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td></td>
+						  </tr>
+						  <tr>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><input type="text" class="form-control" id="usr"></td>
+							<td><button type="button" class="btn btn-primary">Optimize</button></td>
+						  </tr>
+						</tbody>
+					  </table>				
+					</div>
+					<br>
+					<br><br><br>
+					<h5>Return Summary</h5>
+					<br>
+					<div class="row">
+					  <table class="table table-striped">
+						<thead>
+						  <tr>
+							<th>Portfolio</th>
+							<th>Return</th>
+							<th>Max Drawdown</th>
+							<th>Std. Dev.</th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+							<td>Your Portfolio</td>
+							<td>8.5%</td>
+							<td>-15.25%</td>
+							<td>10.5.%</td>
+						  </tr>
+						  <tr>
+							<td>SP 500 Index</td>
+							<td>5%</td>
+							<td>-20.5%</td>
+							<td>6.23%</td>
+						  </tr>
+						  <tr>
+							<td>Optimized Portfolio</td>
+							<td>10.25%</td>
+							<td>-15.75%</td>
+							<td>8.29%</td>
+						  </tr>
+						</tbody>
+					  </table>
+					</div>
+					<div class="row">
+					<svg id=linechart width="960" height="500"></svg>
+					</div>
+				</div>
+            </div>
+        </div>
+    <!-- </div> -->
+
+    <div class="mbr-arrow mbr-arrow-floating" aria-hidden="true"><a href="#footer1-h"><i class="mbr-arrow-icon"></i></a></div>
+
+</section>
+
+<footer class="mbr-small-footer mbr-section mbr-section-nopadding" id="footer1-h" style="background-color: rgb(50, 50, 50); padding-top: 1.75rem; padding-bottom: 1.75rem;">
+    
+    <div class="container">
+        <p class="text-xs-center">Copyright (c) 2017 Portfolio 2.0</p>
+    </div>
+</footer>
+
+
+  <script src="assets/web/assets/jquery/jquery.min.js"></script>
+  <script src="assets/tether/tether.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="assets/smooth-scroll/smooth-scroll.js"></script>
+  <script src="assets/viewport-checker/jquery.viewportchecker.js"></script>
+  <script src="assets/dropdown/js/script.min.js"></script>
+  <script src="assets/touch-swipe/jquery.touch-swipe.min.js"></script>
+  <script src="assets/theme/js/script.js"></script>
+  
+  
+  <input name="animation" type="hidden">
+  
+	<script>
+
+	var svg = d3.select("#linechart"),
+		margin = {top: 20, right: 80, bottom: 30, left: 50},
+		width = svg.attr("width") - margin.left - margin.right,
+		height = svg.attr("height") - margin.top - margin.bottom,
+		g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var parseTime = d3.timeParse("%Y%m%d");
+
+	var x = d3.scaleTime().range([0, width]),
+		y = d3.scaleLinear().range([height, 0]),
+		z = d3.scaleOrdinal(d3.schemeCategory10);
+
+	var line = d3.line()
+		.curve(d3.curveBasis)
+		.x(function(d) { return x(d.date); })
+		.y(function(d) { return y(d.temperature); });
+
+	d3.tsv("data/data.tsv", type, function(error, data) {
+	  if (error) throw error;
+
+	  var cities = data.columns.slice(1).map(function(id) {
+		return {
+		  id: id,
+		  values: data.map(function(d) {
+			return {date: d.date, temperature: d[id]};
+		  })
+		};
+	  });
+
+	  x.domain(d3.extent(data, function(d) { return d.date; }));
+
+	  y.domain([
+		d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
+		d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.temperature; }); })
+	  ]);
+
+	  z.domain(cities.map(function(c) { return c.id; }));
+
+	  g.append("g")
+		  .attr("class", "axis axis--x")
+		  .attr("transform", "translate(0," + height + ")")
+		  .call(d3.axisBottom(x));
+
+	  g.append("g")
+		  .attr("class", "axis axis--y")
+		  .call(d3.axisLeft(y))
+		.append("text")
+		  .attr("transform", "rotate(-90)")
+		  .attr("y", 6)
+		  .attr("dy", "0.71em")
+		  .attr("fill", "#000")
+		  .text("Return, %");
+
+	  var city = g.selectAll(".city")
+		.data(cities)
+		.enter().append("g")
+		.attr("class", "city");
+
+	  city.append("path")
+		  .attr("class", "line")
+		  .attr("d", function(d) { return line(d.values); })
+		  .style("stroke", function(d) { return z(d.id); });
+
+	  city.append("text")
+		  .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
+		  .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
+		  .attr("x", 3)
+		  .attr("dy", "0.35em")
+		  .style("font", "8px sans-serif")
+		  .style("font-weight", "bold")
+		  .text(function(d) { return d.id; });
+	});
+
+	function type(d, _, columns) {
+	  d.date = parseTime(d.date);
+	  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
+	  return d;
+	}
+
+	</script>
+  
+  </body>
+</html>
