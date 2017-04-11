@@ -34,8 +34,7 @@
 }
 
 </style>
-<script src="//d3js.org/d3.v4.min.js"></script>  
-  
+<script src="//d3js.org/d3.v4.min.js"></script>
 </head>
 <body>
 <section id="menu-g">
@@ -140,7 +139,7 @@
 					  <table class="table table-bordered">
 						<thead>
 						  <tr>
-							<th>Asset Ticker</th>
+							<th>Asset</th>
 							<th>Your Allocation</th>
 							<th>Optimized Allocation</th>
 							<th></th>
@@ -148,31 +147,89 @@
 						</thead>
 						<tbody>
 						  <tr>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><input type="text" class="form-control" id="usr"></td>
+							<td><select class="form-control" id="asset1">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td><input type="text" class="form-control" id="your_alloc1" onchange="calc_total();"></td>
+							<td><input type="text" class="form-control" id="opt_alloc1" readonly="true"></td>
 							<td></td>
 						  </tr>
 						  <tr>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><input type="text" class="form-control" id="usr"></td>
+							<td><select class="form-control" id="asset2">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td><input type="text" class="form-control" id="your_alloc2" onchange="calc_total();"></td>
+							<td><input type="text" class="form-control" id="opt_alloc2" readonly="true"></td>
 							<td></td>
 						  </tr>
 						  <tr>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><input type="text" class="form-control" id="usr"></td>
-							<td><button type="button" class="btn btn-primary">Optimize</button></td>
+							<td><select class="form-control" id="asset3">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td><input type="text" class="form-control" id="your_alloc3" onchange="calc_total();"></td>
+							<td><input type="text" class="form-control" id="opt_alloc3" readonly="true"></td>
+							<td></td>
+						  </tr>
+						  <tr>
+							<td align="right" valign="bottom"><b>Total:</b></td>
+							<td><input type="text" class="form-control" id="total_alloc" readonly="true"></td>
+							<td></td>
+							<td><button type="button" class="btn btn-primary" id="optimize_btn" onclick="optimize();">Optimize</button>
+								<button type="button" class="btn btn-primary" id="summary_btn" onclick="scroll();" disabled="true">View Summary</button>
+							</td>
 						  </tr>
 						</tbody>
 					  </table>				
 					</div>
 					<br>
-					<br><br><br>
-					<h5>Return Summary</h5>
-					<br>
-					<div class="row">
+					<div class="row" id="ret_summary" hidden="true">
+					  <h5>Return Summary</h5>
+					  <br>
 					  <table class="table table-striped">
 						<thead>
 						  <tr>
@@ -204,7 +261,7 @@
 						</tbody>
 					  </table>
 					</div>
-					<div class="row">
+					<div class="row" id="ret_chart" hidden="true">
 					<svg id=linechart width="960" height="500"></svg>
 					</div>
 				</div>
@@ -235,7 +292,38 @@
   
   
   <input name="animation" type="hidden">
-  
+
+	<script>
+		function calc_total() {
+			var alloc1 = parseInt(document.getElementById("your_alloc1").value, 10);
+			var alloc2 = parseInt(document.getElementById("your_alloc2").value, 10);
+			var alloc3 = parseInt(document.getElementById("your_alloc3").value, 10);
+			var total = 0;
+
+			if(!isNaN(alloc1))
+				total += alloc1;
+			if(!isNaN(alloc2))
+				total += alloc2;
+			if(!isNaN(alloc3))
+				total += alloc3;
+
+			document.getElementById("total_alloc").value = total;
+		}
+		function optimize() {
+			document.getElementById("opt_alloc1").value = 30;
+			document.getElementById("opt_alloc2").value = 45;
+			document.getElementById("opt_alloc3").value = 25;
+			document.getElementById("summary_btn").disabled = false;
+		}
+
+		function scroll() {
+			document.getElementById("ret_summary").hidden = false;
+			document.getElementById("ret_chart").hidden = false;
+			var top = document.getElementById("ret_summary").offsetTop; //Getting Y of target element
+    		window.scrollTo(0, top-60);
+		}
+	</script>
+
 	<script>
 
 	var svg = d3.select("#linechart"),
@@ -252,17 +340,17 @@
 
 	var line = d3.line()
 		.curve(d3.curveBasis)
-		.x(function(d) { return x(d.date); })
-		.y(function(d) { return y(d.temperature); });
+		.x(function(d) { return x(d.x); })
+		.y(function(d) { return y(d.y); });
 
-	d3.tsv("data/data.tsv", type, function(error, data) {
+	d3.tsv("/api/get_optimized_returns", type, function(error, data) {
 	  if (error) throw error;
 
-	  var cities = data.columns.slice(1).map(function(id) {
+	  var groups = data.columns.slice(1).map(function(id) {
 		return {
 		  id: id,
 		  values: data.map(function(d) {
-			return {date: d.date, temperature: d[id]};
+			return {x: d.date, y: d[id]};
 		  })
 		};
 	  });
@@ -270,11 +358,11 @@
 	  x.domain(d3.extent(data, function(d) { return d.date; }));
 
 	  y.domain([
-		d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
-		d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.temperature; }); })
+		d3.min(groups, function(c) { return d3.min(c.values, function(d) { return d.y; }); }),
+		d3.max(groups, function(c) { return d3.max(c.values, function(d) { return d.y; }); })
 	  ]);
 
-	  z.domain(cities.map(function(c) { return c.id; }));
+	  z.domain(groups.map(function(c) { return c.id; }));
 
 	  g.append("g")
 		  .attr("class", "axis axis--x")
@@ -291,19 +379,19 @@
 		  .attr("fill", "#000")
 		  .text("Return, %");
 
-	  var city = g.selectAll(".city")
-		.data(cities)
+	  var group = g.selectAll(".group")
+		.data(groups)
 		.enter().append("g")
-		.attr("class", "city");
+		.attr("class", "group");
 
-	  city.append("path")
+	  group.append("path")
 		  .attr("class", "line")
 		  .attr("d", function(d) { return line(d.values); })
 		  .style("stroke", function(d) { return z(d.id); });
 
-	  city.append("text")
+	  group.append("text")
 		  .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
-		  .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
+		  .attr("transform", function(d) { return "translate(" + x(d.value.x) + "," + y(d.value.y) + ")"; })
 		  .attr("x", 3)
 		  .attr("dy", "0.35em")
 		  .style("font", "8px sans-serif")
