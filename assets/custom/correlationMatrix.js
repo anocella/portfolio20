@@ -31,8 +31,7 @@
 							num = Math.sqrt(data.length),
 							color = d3.scale.linear()
 							  .domain([-1, 0, 1])
-							  //.range([d3.hsl(240, .4, .6), d3.hsl(120, .4, .6), d3.hsl(0, .8, .5)]);
-							  .range(["#ff0000", "#00ff00", "#0000ff"]);
+							  .range([d3.hsl(240, .4, .6), d3.hsl(120, .4, .6), d3.hsl(0, .8, .5)]);
 
 						  var x = d3.scale
 							.ordinal()
