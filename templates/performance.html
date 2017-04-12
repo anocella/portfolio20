@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Site made with Mobirise Website Builder v3.12.1, https://mobirise.com -->
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="generator" content="Mobirise v3.12.1, mobirise.com">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="assets/images/mbr-192x128.jpg" type="image/x-icon">
-  <meta name="description" content="Porfolio Performance">
-  <title>Portfolio Performance</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
-  <link rel="stylesheet" href="assets/bootstrap-material-design-font/css/material.css">
-  <link rel="stylesheet" href="assets/tether/tether.min.css">
-  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/animate.css/animate.min.css">
-  <link rel="stylesheet" href="assets/dropdown/css/style.css">
-  <link rel="stylesheet" href="assets/socicon/css/styles.css">
-  <link rel="stylesheet" href="assets/theme/css/style.css">
-  <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
-  
+    <!-- Site made with Mobirise Website Builder v3.12.1, https://mobirise.com -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="Mobirise v3.12.1, mobirise.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="assets/images/mbr-192x128.jpg" type="image/x-icon">
+    <meta name="description" content="Porfolio Performance">
+    <title>Portfolio Performance</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/bootstrap-material-design-font/css/material.css">
+    <link rel="stylesheet" href="assets/tether/tether.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/animate.css/animate.min.css">
+    <link rel="stylesheet" href="assets/dropdown/css/style.css">
+    <link rel="stylesheet" href="assets/socicon/css/styles.css">
+    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
   
   
 </head>
@@ -69,8 +77,235 @@
                 <div class="mbr-section col-md-10">
 
                     <h1 class="mbr-section-title display-1">Portfolio Performance</h1>
-                    <p class="mbr-section-lead lead">Full screen intro with color background.<br>Buttons, text and title are aligned to the left.</p>
-                    
+                    <p class="mbr-section-lead lead">Compare the performance of your portfolio with the standard 60/40 porfolio.</p>
+                    <div class="bootstrap-iso">
+                        <div id="nav" style="width: 475px; margin-top: 0px; float: left;"></div>
+                        <div id="drawdown" style="margin-left: 495px; margin-top: 20px;"></div>
+                        <div id="volatility" style="width: 475px; margin-top: 20px; float: left;"></div>
+                        <div id="sharpe" style="margin-left: 495px; margin-top: 20px;"></div>
+                          <script>
+                              function perfCharts(dataUrl) {
+                                  d3.csv(dataUrl, function(error, dataset) {
+                                      console.log('Hello Im here')
+
+                                      var date = [],
+                                            mydd = [],
+                                            myvol = [],
+                                            mynav = [],
+                                            mysr = [],
+                                            sfdd = [],
+                                            sfvol = [],
+                                            sfnav = [],
+                                            sfsr = [];
+                                      parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse
+                                      formatDate = d3.time.format("%Y")
+
+                                      dataset.map(function(d){
+                                          date.push(formatDate(parseDate(d.Date)));
+                                          mydd.push(+d.myport_Drawdown);
+                                          myvol.push(+d.myport_Volatility);
+                                          mynav.push(+d.myport_NAV);
+                                          mysr.push(+d.myport_Sharpe);
+                                          sfdd.push(+d.port6040_Drawdown);
+                                          sfvol.push(+d.port6040_Volatility);
+                                          sfnav.push(+d.port6040_NAV);
+                                          sfsr.push(+d.port6040_Sharpe);
+                                      });
+                                        console.log(date)
+                                      Highcharts.chart('nav', {
+                                        chart: {
+                                            type: 'line'
+                                        },
+                                        title: {
+                                            text: 'Cumulative return'
+                                        },
+                                        subtitle: {
+                                            text: 'Performance comparison'
+                                        },
+                                        xAxis: {
+                                            categories: date,
+                                            type: 'datetime',
+                                            dateTimeLabelFormats: { // don't display the dummy year
+                                                day: '%Y',
+                                                month: '%Y',
+                                                year: '%Y'
+                                            },
+                                            title: {
+                                                text: 'Date'
+                                            }
+                                        },
+                                        yAxis: {
+                                            labels: {
+                                                formatter: function () {
+                                                    return '$' + this.value;
+                                                }
+                                            },
+                                        },
+                                        plotOptions: {
+                                            line: {
+                                                dataLabels: {
+                                                    enabled: false
+                                                },
+                                                enableMouseTracking: true
+                                            }
+                                        },
+                                        series: [{
+                                            name: 'My Portfolio',
+                                            data: mynav
+                                        }, {
+                                            name: '60/40',
+                                            data: sfnav
+                                        }]
+                                    }); // end of nav
+                                      Highcharts.chart('drawdown', {
+                                        chart: {
+                                            type: 'line'
+                                        },
+                                        title: {
+                                            text: 'Drawdown'
+                                        },
+                                        subtitle: {
+                                            text: 'Performance comparison'
+                                        },
+                                        xAxis: {
+                                            categories: date,
+                                            type: 'datetime',
+                                            dateTimeLabelFormats: { // don't display the dummy year
+                                                day: '%Y',
+                                                month: '%Y',
+                                                year: '%Y'
+                                            },
+                                            title: {
+                                                text: 'Date'
+                                            }
+                                        },
+                                        yAxis: {
+                                            title: {
+                                                text: 'Drawdown'
+                                            },
+                                            labels: {
+                                                formatter: function () {
+                                                    return (this.value > 0 ? ' + ' : '') + this.value*100 + '%';
+                                                }
+                                            },
+                                        },
+                                        plotOptions: {
+                                            line: {
+                                                dataLabels: {
+                                                    enabled: false
+                                                },
+                                                enableMouseTracking: true
+                                            }
+                                        },
+                                        series: [{
+                                            name: 'My Portfolio',
+                                            data: mydd
+                                        }, {
+                                            name: '60/40',
+                                            data: sfdd
+                                        }]
+                                    }); // end of drawdown
+                                      Highcharts.chart('volatility', {
+                                        chart: {
+                                            type: 'line'
+                                        },
+                                        title: {
+                                            text: '12-month rolling volatility'
+                                        },
+                                        subtitle: {
+                                            text: 'Performance comparison'
+                                        },
+                                        xAxis: {
+                                            categories: date,
+                                            type: 'datetime',
+                                            dateTimeLabelFormats: { // don't display the dummy year
+                                                day: '%Y',
+                                                month: '%Y',
+                                                year: '%Y'
+                                            },
+                                            title: {
+                                                text: 'Date'
+                                            }
+                                        },
+                                        yAxis: {
+                                            title: {
+                                                text: 'Volatility'
+                                            },
+                                            labels: {
+                                                formatter: function () {
+                                                    return this.value*100 + '%';
+                                                }
+                                            },
+                                        },
+                                        plotOptions: {
+                                            line: {
+                                                dataLabels: {
+                                                    enabled: false
+                                                },
+                                                enableMouseTracking: true
+                                            }
+                                        },
+                                        series: [{
+                                            name: 'My Portfolio',
+                                            data: myvol
+                                        }, {
+                                            name: '60/40',
+                                            data: sfvol
+                                        }]
+                                    }); // end of volatility
+                                      Highcharts.chart('sharpe', {
+                                        chart: {
+                                            type: 'line'
+                                        },
+                                        title: {
+                                            text: 'Sharpe ratio'
+                                        },
+                                        subtitle: {
+                                            text: 'Performance comparison'
+                                        },
+                                        xAxis: {
+                                            categories: date,
+                                            type: 'datetime',
+                                            dateTimeLabelFormats: { // don't display the dummy year
+                                                day: '%Y',
+                                                month: '%Y',
+                                                year: '%Y'
+                                            },
+                                            title: {
+                                                text: 'Date'
+                                            }
+                                        },
+                                        yAxis: {
+                                            title: {
+                                                text: 'Sharpe ratio'
+                                            },
+                                            labels: {
+                                                formatter: function () {
+                                                    return (this.value > 0 ? ' + ' : '') + this.value;
+                                                }
+                                            },
+                                        },
+                                        plotOptions: {
+                                            line: {
+                                                dataLabels: {
+                                                    enabled: false
+                                                },
+                                                enableMouseTracking: true
+                                            }
+                                        },
+                                        series: [{
+                                            name: 'My Portfolio',
+                                            data: mysr
+                                        }, {
+                                            name: '60/40',
+                                            data: sfsr
+                                        }]
+                                    }); // end of Sharpe ratio
+                                  });
+                              }
+                                perfCharts("http://localhost:5000/perf?portName=myport&startDate=9/01/2007&endDate=01/02/2014")
+                          </script>
+                    </div>
                 </div>
             </div>
         </div>
