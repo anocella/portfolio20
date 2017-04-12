@@ -86,7 +86,8 @@
                           <script>
                               function perfCharts(dataUrl) {
                                   d3.csv(dataUrl, function(error, dataset) {
-                                      console.log('Hello Im here')
+                                      	console.log(dataset)
+					console.log('Hello Im here')
 
                                       var date = [],
                                             mydd = [],
@@ -303,7 +304,7 @@
                                     }); // end of Sharpe ratio
                                   });
                               }
-                                perfCharts("http://localhost:5000/perf?portName=myport&startDate=9/01/2007&endDate=01/02/2014")
+                                perfCharts("/perf?portName=myport&startDate=9/01/2007&endDate=01/02/2014")
                           </script>
                     </div>
                 </div>

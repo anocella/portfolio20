@@ -214,6 +214,7 @@ class PerformanceAPI(Resource):
 
         cnx = sqlite3.connect('data/perf/portfolio_data.db')
         asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
+	print asset_returns
         weights = {
             u'Gold': .2,
             u'Preferred': .2,
@@ -250,7 +251,9 @@ class PerformanceAPI(Resource):
         dest = io.BytesIO()
         df.to_csv(dest, encoding='utf-8')
 
-        return Response(dest.getvalue(), mimetype="text")
+        #return Response(dest.getvalue(), mimetype="text")
+	return 12
+
 
 
 api.add_resource(HelloWorld, '/hello')

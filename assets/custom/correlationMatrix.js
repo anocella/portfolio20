@@ -154,7 +154,7 @@
 					    });
 			}
 
-			var baseUrl = "http://localhost:5000/corr?"
+			var baseUrl = "corr?"
 			d3.select("#recalculate").on("click", function() {drawThings(baseUrl + "startDate=" + document.getElementById("sd").value + "&endDate=" + document.getElementById("ed").value)})
 			drawThings(baseUrl + "startDate=" + document.getElementById("sd").value + "&endDate=" + document.getElementById("ed").value)
 
