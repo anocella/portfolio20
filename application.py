@@ -50,9 +50,10 @@ class CorrelationAPI(Resource):
                          """, (dp(args.startDate), dp(args.endDate))).fetchall()
         print(dp(args.startDate))
         print(dp(args.endDate))
-        print(data)
         if not data:
             abort(400)
+        else:
+            print(data[0])
         corr = []
         for x in range(len(data[0])):
             row = []
@@ -250,9 +251,9 @@ class PerformanceAPI(Resource):
         print('Performance API return')
         dest = io.BytesIO()
         df.to_csv(dest, encoding='utf-8')
+	print dest.getvalue()
 
-        #return Response(dest.getvalue(), mimetype="text")
-	return 12
+        return Response(dest.getvalue(), mimetype="text")
 
 
 
