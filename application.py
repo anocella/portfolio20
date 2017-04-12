@@ -1,6 +1,5 @@
-
-#W209 Course Project
-#Portfolio 2.0
+# W209 Course Project
+# Portfolio 2.0
 
 import sqlite3
 import dateutil.parser as dateparser
@@ -46,7 +45,7 @@ class CorrelationAPI(Resource):
                          realestate, mediumtreasury, longtreasury, tips, commodities, developedexus,
                          largecap, midcap, smallcap
                          FROM returns
-                         WHERE date between ? and ?
+                         WHERE date BETWEEN ? AND ?
                          """, (dp(args.startDate), dp(args.endDate))).fetchall()
         print(dp(args.startDate))
         print(dp(args.endDate))
@@ -74,6 +73,127 @@ class CorrelationAPI(Resource):
 
 
 class PerformanceAPI(Resource):
+    @staticmethod
+    def get_weights(portName):
+        # 60% stocks, 40% bonds
+        stocks = .6
+        bonds = .4
+
+        # stocks
+        smallcap = .1
+        midcap = .3
+        largecap = .6
+
+        # bonds
+        igcorp = .5
+        longT = .25
+        medT = .25
+        all_weights = {
+            u'my_port1': {
+                u'Gold': .2,
+                u'Preferred': .2,
+                u'IGCorp': .1,
+                u'HYCorp': .2,
+                u'LevLoan': .05,
+                u'Emerging': .15,
+                u'RealEstate': 0,
+                u'MedTreas': 0,
+                u'LongTreas': 0,
+                u'TIPS': 0,
+                u'GSCI': 0,
+                u'DevXUS': 0,
+                u'LargeCap': 0,
+                u'MidCap': 0,
+                u'SmallCap': 0,
+            },
+            u'my_port2': {
+                u'Gold': .05,
+                u'Preferred': .05,
+                u'IGCorp': .05,
+                u'HYCorp': .05,
+                u'LevLoan': .05,
+                u'Emerging': .05,
+                u'RealEstate': .05,
+                u'MedTreas': .05,
+                u'LongTreas': .05,
+                u'TIPS': .15,
+                u'GSCI': .05,
+                u'DevXUS': .05,
+                u'LargeCap': .1,
+                u'MidCap': .05,
+                u'SmallCap': .05,
+            },
+            u'cash': {
+                u'Gold': .0,
+                u'Preferred': .0,
+                u'IGCorp': .0,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': .0,
+                u'MedTreas': .0,
+                u'LongTreas': .0,
+                u'TIPS': .0,
+                u'GSCI': .0,
+                u'DevXUS': .0,
+                u'LargeCap': .0,
+                u'MidCap': .0,
+                u'SmallCap': .0,
+            },
+            u'port6040': {
+                u'Gold': .0,
+                u'Preferred': .0,
+                u'IGCorp': igcorp * bonds,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': .0,
+                u'MedTreas': medT * bonds,
+                u'LongTreas': longT * bonds,
+                u'TIPS': .0,
+                u'GSCI': .0,
+                u'DevXUS': .0,
+                u'LargeCap': largecap * stocks,
+                u'MidCap': midcap * stocks,
+                u'SmallCap': smallcap * stocks,
+            },
+            u'all_equity': {
+                u'Gold': .0,
+                u'Preferred': .0,
+                u'IGCorp': .0,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': 0,
+                u'MedTreas': 0,
+                u'LongTreas': 0,
+                u'TIPS': 0,
+                u'GSCI': 0,
+                u'DevXUS': 0,
+                u'LargeCap': 0.5,
+                u'MidCap': 0.3,
+                u'SmallCap': 0.2,
+            },
+            u'gold': {
+                u'Gold': 1.0,
+                u'Preferred': .0,
+                u'IGCorp': .0,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': .0,
+                u'MedTreas': .0,
+                u'LongTreas': .0,
+                u'TIPS': .0,
+                u'GSCI': .0,
+                u'DevXUS': .0,
+                u'LargeCap': .0,
+                u'MidCap': .0,
+                u'SmallCap': .0,
+            },
+        }
+        return all_weights[portName]
+
     @staticmethod
     def add_libor(omega):
         omega.set_value(u'LIBOR', 1 - sum(omega))
@@ -177,6 +297,20 @@ class PerformanceAPI(Resource):
             columns={0: 'Return', 1: 'Volatility', 2: 'NAV', 3: 'Drawdown', 4: 'Sharpe'})
 
     @staticmethod
+    def combine_portfolios(port1, port2):
+        keys1 = port1.columns
+        values1 = 'port1_' + keys1
+        port1 = port1.rename(
+            columns=dict(zip(keys1, values1)))
+
+        keys2 = port2.columns
+        values2 = 'port2_' + keys2
+        port2 = port2.rename(
+            columns=dict(zip(keys2, values2)))
+
+        return pd.concat([port1, port2], axis=1)
+
+    @staticmethod
     def add_60_40(asset_returns, my_port, name=None):
         begin = my_port.index[0]
         end = my_port.index[-1]
@@ -206,60 +340,46 @@ class PerformanceAPI(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('startDate', type=str)
         parser.add_argument('endDate', type=str)
-        parser.add_argument('portName', type=str)
+        parser.add_argument('portName1', type=str)
+        parser.add_argument('portName2', type=str)
         args = parser.parse_args()
 
         print(dp(args.startDate))
         print(dp(args.endDate))
-        print(args.portName)
+        print(args.portName1)
+        print(args.portName2)
 
         cnx = sqlite3.connect('data/perf/portfolio_data.db')
         asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
-	print asset_returns
-        weights = {
-            u'Gold': .2,
-            u'Preferred': .2,
-            u'IGCorp': .1,
-            u'HYCorp': .2,
-            u'LevLoan': .05,
-            u'Emerging': .15,
-            u'RealEstate': 0,
-            u'MedTreas': 0,
-            u'LongTreas': 0,
-            u'TIPS': 0,
-            u'GSCI': 0,
-            u'DevXUS': 0,
-            u'LargeCap': 0,
-            u'MidCap': 0,
-            u'SmallCap': 0,
-        }
-        my_port = PerformanceAPI.generate_performance_measures(asset_returns,
-                                                               weights,
-                                                               begin=dp(args.startDate),
-                                                               end=dp(args.endDate),
-                                                               begin_nav=100)
-        df = PerformanceAPI.add_60_40(asset_returns, my_port, args.portName)
-        print
-        df.columns
 
-        # df = pd.read_sql_query("""SELECT My.Date AS Date, My.NAV AS MyNAV, My.Drawdown AS MyDD, My.Volatility AS MyVol, My.Sharpe AS MySR,
-        #                          SF.NAV AS SFNAV, SF.Drawdown AS SFDD, SF.Volatility SFVol, SF.Sharpe AS SFSR
-        #                          FROM MyPortfolio My JOIN Port6040 SF on My.Date = SF.Date
-        #                          WHERE My.Date BETWEEN '{0}' AND '{1}'""".format(dp(args.startDate), dp(args.endDate)),
-        #                       con=cnx, index_col='Date')
+        weights1 = PerformanceAPI.get_weights(args.portName1)
+        weights2 = PerformanceAPI.get_weights(args.portName2)
+
+        port1 = PerformanceAPI.generate_performance_measures(asset_returns,
+                                                             weights1,
+                                                             begin=dp(args.startDate),
+                                                             end=dp(args.endDate),
+                                                             begin_nav=100)
+        port2 = PerformanceAPI.generate_performance_measures(asset_returns,
+                                                             weights2,
+                                                             begin=dp(args.startDate),
+                                                             end=dp(args.endDate),
+                                                             begin_nav=100)
+        df = PerformanceAPI.combine_portfolios(port1, port2)
+        print df.columns
 
         print('Performance API return')
         dest = io.BytesIO()
         df.to_csv(dest, encoding='utf-8')
-	print dest.getvalue()
+        print dest.getvalue()
 
         return Response(dest.getvalue(), mimetype="text")
-
 
 
 api.add_resource(HelloWorld, '/hello')
 api.add_resource(CorrelationAPI, '/corr')
 api.add_resource(PerformanceAPI, '/perf')
+
 
 @app.route('/api/get_optimized_returns', methods=['GET'])
 def get_optimized_returns():
@@ -267,6 +387,7 @@ def get_optimized_returns():
     str_buf = returns.read()
     returns.close()
     return str_buf
+
 
 @app.route('/')
 @app.route('/index.html')
@@ -305,7 +426,4 @@ def send_data(path):
 
 
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
-
-
-
+    app.run(debug=False, host='0.0.0.0')
