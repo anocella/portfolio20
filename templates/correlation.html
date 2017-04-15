@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+
   <link rel="stylesheet" href="assets/bootstrap-material-design-font/css/material.css">
   <link rel="stylesheet" href="assets/tether/tether.min.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
@@ -21,13 +22,10 @@
   <link rel="stylesheet" href="assets/theme/css/style.css">
   <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
 
-  <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-  <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
-  <!-- Bootstrap Date-Picker Plugin -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <link href="assets/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
 
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
     <style>
       rect {
           stroke: lightgray;
@@ -59,7 +57,7 @@
                 <div class="mbr-table-cell">
 
                     <div class="navbar-brand">
-                        <a href="https://mobirise.com" class="socicon socicon-paypal mbr-iconfont mbr-iconfont-menu navbar-logo"></a>
+                        <a href="index.html" class="socicon socicon-paypal mbr-iconfont mbr-iconfont-menu navbar-logo"></a>
                         <a class="navbar-caption" href="index.html">Portfolio 2.0</a>
                     </div>
 
@@ -92,22 +90,36 @@
         <div class="container">
             <div class="row">
                 <div id="chart" class="mbr-section col-md-10">
-
-                    <h1 class="mbr-section-title display-1">Asset Correlation</h1>
-                    <!--p class="mbr-section-lead lead">Full screen intro with color background.<br>Buttons, text and title are aligned to the left.</p-->
-                    Start date (mm/dd/yyyy): <input type="text" id="sd" value="03/31/2007">
-                    <br>
-                    End date (mm/dd/yyyy): <input type="text" id="ed" value="03/31/2017">
-                    <br>
-                    <button id="recalculate">Recalculate Correlations</button>
-					  <script src="assets/custom/correlationMatrix.js"></script>
-
+                    <p class="mbr-section-lead lead">Asset Correlation</p>
+					<div class="row">
+						<div class="col-xs-4 col-md-4">
+                            <label for="sd">Start Date:</label>
+                            <div class="input-group date form_date" data-date="03/31/2007" data-date-format="mm/dd/yyyy" data-link-field="sd" data-link-format="mm/dd/yyyy">
+                            <input class="form-control" size="16" type="text" value="03/31/2007" readonly>
+                            <span class="input-group-addon"><span class="fa fa-times"></span></span>
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span></span>
+                            </div>
+                            <input type="hidden" id="sd" value="03/31/2007" /><br/>
+						</div>
+						<div class="col-xs-4 col-md-4">
+                            <label for="ed">End Date:</label>
+                            <div class="input-group date form_date" data-date="03/31/2017" data-date-format="mm/dd/yyyy" data-link-field="ed" data-link-format="mm/dd/yyyy">
+                            <input class="form-control" size="16" type="text" value="03/31/2017" readonly>
+                            <span class="input-group-addon"><span class="fa fa-times"></span></span>
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span></span>
+                            </div>
+                            <input type="hidden" id="ed" value="03/31/2017" /><br/>
+						</div>
+                        <div class="col-xs-4 col-md-4">
+                            <label for="recalculate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <button class="btn btn-primary" id="recalculate">Recalculate Correlations</button>
+						</div>
+					</div>
+                    <script src="assets/custom/correlationMatrix.js"></script>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="mbr-arrow mbr-arrow-floating" aria-hidden="true"><a href="#footer1-k"><i class="mbr-arrow-icon"></i></a></div>
 
 </section>
 
@@ -119,7 +131,11 @@
 </footer>
 
 
-  <script src="assets/web/assets/jquery/jquery.min.js"></script>
+ <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"
+      integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+      crossorigin="anonymous"></script>
+
+<!--  <script src="assets/web/assets/jquery/jquery.min.js"></script>-->
   <script src="assets/tether/tether.min.js"></script>
   <script src="assets/bootstrap/js/bootstrap.min.js"></script>
   <script src="assets/smooth-scroll/smooth-scroll.js"></script>
@@ -127,6 +143,21 @@
   <script src="assets/dropdown/js/script.min.js"></script>
   <script src="assets/touch-swipe/jquery.touch-swipe.min.js"></script>
   <script src="assets/theme/js/script.js"></script>
+  <script type="text/javascript" src="assets/datepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="assets/datepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+
+  <script type="text/javascript">
+        $('.form_date').datetimepicker({
+            language:  'en',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+  </script>
 
 
   <input name="animation" type="hidden">
