@@ -6,14 +6,16 @@ import dateutil.parser as dateparser
 import io
 import csv
 import math
-from flask import Flask, Response, abort, render_template, send_from_directory
+from flask import Flask, Response, abort, render_template, send_from_directory, session
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 from scipy.stats.stats import pearsonr
 import numpy as np
 import pandas as pd
+import StringIO
 
 app = Flask(__name__, static_url_path='')
+app.secret_key = 'very secret'
 api = Api(app)
 CORS(app)
 
@@ -352,7 +354,12 @@ class PerformanceAPI(Resource):
         cnx = sqlite3.connect('data/perf/portfolio_data.db')
         asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
 
-        weights1 = PerformanceAPI.get_weights(args.portName1)
+        # get your port from session object
+        if args.portName1 == 'my_port':
+            weights1 = session['my_port']
+        else:
+            weights1 = PerformanceAPI.get_weights(args.portName1)
+
         weights2 = PerformanceAPI.get_weights(args.portName2)
 
         port1 = PerformanceAPI.generate_performance_measures(asset_returns,
@@ -376,18 +383,204 @@ class PerformanceAPI(Resource):
         return Response(dest.getvalue(), mimetype="text")
 
 
+class OptimizationAPI(Resource):
+
+    @staticmethod
+    def get_optimized_port(portName):
+        # 60% stocks, 40% bonds
+        stocks = .6
+        bonds = .4
+
+        # stocks
+        smallcap = .1
+        midcap = .3
+        largecap = .6
+
+        # bonds
+        igcorp = .5
+        longT = .25
+        medT = .25
+        all_weights = {
+            u'10-years': {
+                u'Gold': .2,
+                u'Preferred': .2,
+                u'IGCorp': .1,
+                u'HYCorp': .2,
+                u'LevLoan': .05,
+                u'Emerging': .15,
+                u'RealEstate': 0,
+                u'MedTreas': 0,
+                u'LongTreas': 0,
+                u'TIPS': 0,
+                u'GSCI': 0,
+                u'DevXUS': 0,
+                u'LargeCap': 0,
+                u'MidCap': 0,
+                u'SmallCap': 0,
+            },
+            u'5-years': {
+                u'Gold': .05,
+                u'Preferred': .05,
+                u'IGCorp': .05,
+                u'HYCorp': .05,
+                u'LevLoan': .05,
+                u'Emerging': .05,
+                u'RealEstate': .05,
+                u'MedTreas': .05,
+                u'LongTreas': .05,
+                u'TIPS': .15,
+                u'GSCI': .05,
+                u'DevXUS': .05,
+                u'LargeCap': .1,
+                u'MidCap': .05,
+                u'SmallCap': .05,
+            },
+            u'3-years': {
+                u'Gold': .0,
+                u'Preferred': .0,
+                u'IGCorp': igcorp * bonds,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': .0,
+                u'MedTreas': medT * bonds,
+                u'LongTreas': longT * bonds,
+                u'TIPS': .0,
+                u'GSCI': .0,
+                u'DevXUS': .0,
+                u'LargeCap': largecap * stocks,
+                u'MidCap': midcap * stocks,
+                u'SmallCap': smallcap * stocks,
+            },
+            u'1-year': {
+                u'Gold': .0,
+                u'Preferred': .0,
+                u'IGCorp': igcorp * bonds,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': .0,
+                u'MedTreas': medT * bonds,
+                u'LongTreas': longT * bonds,
+                u'TIPS': .0,
+                u'GSCI': .0,
+                u'DevXUS': .0,
+                u'LargeCap': largecap * stocks,
+                u'MidCap': midcap * stocks,
+                u'SmallCap': smallcap * stocks,
+            },
+            u'cash': {
+                u'Gold': .0,
+                u'Preferred': .0,
+                u'IGCorp': .0,
+                u'HYCorp': .0,
+                u'LevLoan': .0,
+                u'Emerging': .0,
+                u'RealEstate': .0,
+                u'MedTreas': .0,
+                u'LongTreas': .0,
+                u'TIPS': .0,
+                u'GSCI': .0,
+                u'DevXUS': .0,
+                u'LargeCap': .0,
+                u'MidCap': .0,
+                u'SmallCap': .0,
+            },
+        }
+        return all_weights[portName]
+
+    def get(self):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('ret', type=str)
+        parser.add_argument('out', type=str)
+
+        for i in range(1, 15):
+            parser.add_argument('asset'+str(i), type=str)
+            parser.add_argument('your_alloc'+str(i), type=str)
+        args = parser.parse_args()
+
+        if args.ret == '10-years':
+            sd = '2007-03-31'
+            ed = '2017-03-31'
+        elif args.ret == '5-years':
+            sd = '2012-03-31'
+            ed = '2017-03-31'
+        elif args.ret == '3-years':
+            sd = '2014-03-31'
+            ed = '2017-03-31'
+        else:
+            sd = '2016-03-31'
+            ed = '2017-03-31'
+
+        # re-construct your portfolio dict
+        my_port = OptimizationAPI.get_optimized_port('cash')
+        for i in range(1, 15):
+            try:
+                val = float(args['your_alloc' + str(i)])
+            except ValueError:
+                val = 0.0
+
+            key = args['asset'+str(i)]
+            if key == '':
+                continue
+
+            if key in my_port:
+                my_port[key] += val / 100
+            else:
+                my_port[key] = val / 100
+
+        # store portfolio to the session object
+        session['my_port'] = my_port
+
+        optimized_port = OptimizationAPI.get_optimized_port(args.ret)
+
+        if args.out == 'comparison_tbl':
+            cnx = sqlite3.connect('data/perf/portfolio_data.db')
+            asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
+
+            port1 = PerformanceAPI.generate_performance_measures(asset_returns,
+                                                                 optimized_port,
+                                                                 begin=sd,
+                                                                 end=ed,
+                                                                 begin_nav=100)
+            port2 = PerformanceAPI.generate_performance_measures(asset_returns,
+                                                                 my_port,
+                                                                 begin=sd,
+                                                                 end=ed,
+                                                                 begin_nav=100)
+            print(port1['Return'].sum())
+            print(port2['Return'].sum())
+            dest = StringIO.StringIO()
+            dest.write("Portfolio\tCumulative Return(%)\tMax. Volatility\tMax. Drawdown\tMax. Sharpe\n")
+            dest.write("Optimized Portfolio\t"
+                       + str(round(port1['Return'].sum()*100, 4)) + "\t"
+                       + str(round(port1['Volatility'].max(), 4)) + "\t"
+                       + str(round(port1['Drawdown'].min(), 4)) + "\t"
+                       + str(round(port1['Sharpe'].max(), 4)) + "\n")
+            dest.write("My Portfolio\t"
+                       + str(round(port2['Return'].sum()*100, 4)) + "\t"
+                       + str(round(port2['Volatility'].max(), 4)) + "\t"
+                       + str(round(port2['Drawdown'].min(), 4)) + "\t"
+                       + str(round(port2['Sharpe'].max(), 4)) + "\n")
+
+            print dest.getvalue()
+            return Response(dest.getvalue(), mimetype="text")
+
+        else:
+            dest = StringIO.StringIO()
+            dest.write("asset\tallocation\n")
+            for key, value in optimized_port.iteritems():
+                dest.write(key + "\t" + "%.2f" % (value*100) + "\n")
+
+            print dest.getvalue()
+            return Response(dest.getvalue(), mimetype="text")
+
+
 api.add_resource(HelloWorld, '/hello')
 api.add_resource(CorrelationAPI, '/corr')
 api.add_resource(PerformanceAPI, '/perf')
-
-
-@app.route('/api/get_optimized_returns', methods=['GET'])
-def get_optimized_returns():
-    returns = open('data/data.tsv', 'r')
-    str_buf = returns.read()
-    returns.close()
-    return str_buf
-
+api.add_resource(OptimizationAPI, '/opti')
 
 @app.route('/')
 @app.route('/index.html')
@@ -414,6 +607,9 @@ def optimizer(name=None):
 def contact(name=None):
     return render_template('contact.html', name=name)
 
+@app.route('/datepicker.html')
+def datepicker(name=None):
+    return render_template('datepicker.html', name=name)
 
 @app.route('/assets/<path:path>')
 def send_assets(path):
