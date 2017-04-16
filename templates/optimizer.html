@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="assets/socicon/css/styles.css">
   <link rel="stylesheet" href="assets/theme/css/style.css">
   <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+
+  <link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
   
 <style>
 
@@ -34,7 +36,71 @@
 }
 
 </style>
-<script src="//d3js.org/d3.v4.min.js"></script>
+
+<style>
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x {
+  font-size: 10px;
+  font-weight: bold;
+},
+.axis--x path,
+.axis--x line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis--y {
+  font-size: 10px;
+  font-weight: bold;
+},
+.axis--y path,
+.axis--y line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+</style>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="assets/custom/d3-tip.js"></script>
 </head>
 <body>
 <section id="menu-g">
@@ -57,7 +123,7 @@
                         <div class="hamburger-icon"></div>
                     </button>
 
-                    <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar"><li class="nav-item"><a class="nav-link link" href="index.html">OVERVIEW</a></li><li class="nav-item dropdown"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="index.html" aria-expanded="false">FEATURES</a><div class="dropdown-menu"><a class="dropdown-item" href="correlation.html">Asset Correlation</a><a class="dropdown-item" href="performance.html">Portfolio Performance</a><a class="dropdown-item" href="optimizer.html">Portfolio Optimizer</a></div></li><li class="nav-item dropdown open"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="index.html" aria-expanded="true">HELP</a><div class="dropdown-menu"><a class="dropdown-item" href="contact.html">Contact us</a></div></li></ul>
+                    <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar"><li class="nav-item"><a class="nav-link link" href="index.html">OVERVIEW</a></li><li class="nav-item dropdown"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="index.html" aria-expanded="false">FEATURES</a><div class="dropdown-menu"><a class="dropdown-item" href="correlation.html">Asset Correlation</a><a class="dropdown-item" href="optimizer.html">Portfolio Optimizer</a><a class="dropdown-item" href="performance.html">Portfolio Performance</a></div></li><li class="nav-item dropdown open"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="index.html" aria-expanded="true">HELP</a><div class="dropdown-menu"><a class="dropdown-item" href="contact.html">Contact us</a></div></li></ul>
                     <button hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
                         <div class="close-icon"></div>
                     </button>
@@ -81,73 +147,20 @@
                 <div class="mbr-section col-md-10">
 					<p class="mbr-section-lead lead">Portfolio Optimizer</p>
 					<div class="row">
-						<div class="col-xs-2 col-md-2">
-						  <label for="startyear">Start Year</label>
-						  <select class="form-control" id="startyear">
-							<option>2013</option>
-						    <option>2014</option>
-						    <option>2015</option>
-						    <option>2016</option>
-						    <option>2017</option>
-						  </select>
-						</div>
-						<div class="col-xs-2 col-md-2">
-						  <label for="endyear">End Year</label>
-						  <select class="form-control" id="endyear">
-							<option>2013</option>
-						    <option>2014</option>
-						    <option>2015</option>
-						    <option>2016</option>
-						    <option>2017</option>
-						  </select>
-						</div>
-						<div class="col-xs-4 col-md-4">
-						  <label for="expectedreturn">Expected Return</label>
-						  <select class="form-control" id="expectedreturn">
-							<option>5%</option>
-						    <option>6%</option>
-						    <option>7%</option>
-						    <option>8%</option>
-						    <option>9%</option>
-							<option>10%</option>
-							<option>11%</option>
-							<option>12%</option>
-							<option>13%</option>
-						    <option>14%</option>
-						    <option>15%</option>
-						    <option>16%</option>
-							<option>17%</option>
-							<option>18%</option>
-							<option>19%</option>
-							<option>20%</option>
-						  </select>
-						</div>
-						<div class="col-xs-4 col-md-4">
-						  <label for="benchmark">Benchmark</label>
-						  <select class="form-control" id="benchmark">
-							<option>SP 500 Index</option>
-						    <option>Vanguard 500</option>
-						    <option>Select Others</option>
-						  </select>
-						</div>
-					</div>
-					
-					<br><br>
-					<h5>Allocation</h5>
-					<br>
-					<div class="row">
-					  <table class="table table-bordered">
+					  <table style="border-spacing: 5px 2px; border-collapse: collapse;">
 						<thead>
 						  <tr>
-							<th>Asset</th>
-							<th>Your Allocation</th>
-							<th>Optimized Allocation</th>
-							<th></th>
+							<th width="20%" style="text-align:left;vertical-align:middle">Asset</th>
+							<th width="13%" style="text-align:center;vertical-align:middle">Allocation(%)</th>
+							<th width="20%" style="text-align:left;vertical-align:middle">Asset</th>
+							<th width="13%" style="text-align:center;vertical-align:middle">Allocation(%)</th>
+							<th width="20%" style="text-align:left;vertical-align:middle">Asset</th>
+							<th width="13%" style="text-align:center;vertical-align:middle">Allocation(%)</th>
 						  </tr>
 						</thead>
 						<tbody>
 						  <tr>
-							<td><select class="form-control" id="asset1">
+							<td width="20%"><select class="form-control" id="asset1">
 								<option></option>
 								<option>Gold</option>
 						    	<option>Preferred</option>
@@ -165,12 +178,8 @@
 								<option>MidCap</option>
 								<option>SmallCap</option>
 						    </select></td>
-							<td><input type="text" class="form-control" id="your_alloc1" onchange="calc_total();"></td>
-							<td><input type="text" class="form-control" id="opt_alloc1" readonly="true"></td>
-							<td></td>
-						  </tr>
-						  <tr>
-							<td><select class="form-control" id="asset2">
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc1" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset2">
 								<option></option>
 								<option>Gold</option>
 						    	<option>Preferred</option>
@@ -188,12 +197,8 @@
 								<option>MidCap</option>
 								<option>SmallCap</option>
 						    </select></td>
-							<td><input type="text" class="form-control" id="your_alloc2" onchange="calc_total();"></td>
-							<td><input type="text" class="form-control" id="opt_alloc2" readonly="true"></td>
-							<td></td>
-						  </tr>
-						  <tr>
-							<td><select class="form-control" id="asset3">
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc2" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset3">
 								<option></option>
 								<option>Gold</option>
 						    	<option>Preferred</option>
@@ -211,58 +216,269 @@
 								<option>MidCap</option>
 								<option>SmallCap</option>
 						    </select></td>
-							<td><input type="text" class="form-control" id="your_alloc3" onchange="calc_total();"></td>
-							<td><input type="text" class="form-control" id="opt_alloc3" readonly="true"></td>
-							<td></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc3" oninput="calc_total(this);"></td>
 						  </tr>
 						  <tr>
-							<td align="right" valign="bottom"><b>Total:</b></td>
-							<td><input type="text" class="form-control" id="total_alloc" readonly="true"></td>
-							<td></td>
-							<td><button type="button" class="btn btn-primary" id="optimize_btn" onclick="optimize();">Optimize</button>
-								<button type="button" class="btn btn-primary" id="summary_btn" onclick="scroll();" disabled="true">View Summary</button>
-							</td>
+							<td width="20%"><select class="form-control" id="asset4">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc4" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset5">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc5" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset6">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc6" oninput="calc_total(this);"></td>
+						  </tr>
+						  <tr>
+							<td width="20%"><select class="form-control" id="asset7">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc7" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset8">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc8" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset9">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc9" oninput="calc_total(this);"></td>
+						  </tr>
+						  <tr>
+							<td width="20%"><select class="form-control" id="asset10">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc10" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset11">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc11" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset12">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc12" oninput="calc_total(this);"></td>
+						  </tr>
+						  <tr>
+							<td width="20%"><select class="form-control" id="asset13">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc13" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset14">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc14" oninput="calc_total(this);"></td>
+							<td width="20%"><select class="form-control" id="asset15">
+								<option></option>
+								<option>Gold</option>
+						    	<option>Preferred</option>
+						    	<option>IGCorp</option>
+								<option>HYCorp</option>
+								<option>LevLoan</option>
+								<option>Emerging</option>
+								<option>RealEstate</option>
+								<option>MedTreas</option>
+								<option>LongTreas</option>
+								<option>TIPS</option>
+								<option>GSCI</option>
+								<option>DevXUS</option>
+								<option>LargeCap</option>
+								<option>MidCap</option>
+								<option>SmallCap</option>
+						    </select></td>
+							<td width="13%"><input type="number" min="0" max="100" step="10" class="form-control" id="your_alloc15" oninput="calc_total(this);"></td>
+						  </tr>
+						  <tr>
+							<td width="20%" style="text-align:right;vertical-align:middle"><b>Total Allocation:</b></td>
+							<td width="13%"><input type="text" type="number" min="0" max="100" step="10" class="form-control" id="total_alloc" readonly="true"></td>
+							<td width="20%" style="text-align:right;vertical-align:middle"><b>Historical Return:</b></td>
+							<td width="13%"><select class="form-control" id="ret">
+								<option value="10-years">10 Years</option>
+						    	<option value="5-years">5 Years</option>
+						    	<option value="3-years">3 Years</option>
+								<option value="1-year">1 Year</option>
+						    </select></td>
+							  <td width="20%" style="text-align:center;vertical-align:middle">
+								  <span id="error_msg" style="font-size:10px;color:red;"></span></span>
+								  <i id="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw" hidden="true"></i></td>
+							<td width="13%"><button type="button" class="btn btn-primary" id="optimize_btn" onclick="optimize();">Optimize</button></td>
 						  </tr>
 						</tbody>
 					  </table>				
 					</div>
 					<br>
-					<div class="row" id="ret_summary" hidden="true">
-					  <h5>Return Summary</h5>
-					  <br>
-					  <table class="table table-striped">
-						<thead>
-						  <tr>
-							<th>Portfolio</th>
-							<th>Return</th>
-							<th>Max Drawdown</th>
-							<th>Std. Dev.</th>
-						  </tr>
-						</thead>
-						<tbody>
-						  <tr>
-							<td>Your Portfolio</td>
-							<td>8.5%</td>
-							<td>-15.25%</td>
-							<td>10.5.%</td>
-						  </tr>
-						  <tr>
-							<td>SP 500 Index</td>
-							<td>5%</td>
-							<td>-20.5%</td>
-							<td>6.23%</td>
-						  </tr>
-						  <tr>
-							<td>Optimized Portfolio</td>
-							<td>10.25%</td>
-							<td>-15.75%</td>
-							<td>8.29%</td>
-						  </tr>
-						</tbody>
-					  </table>
+					<div class="row" id="optimized_port" hidden="true">
+						<span>Optimized Portfolio</span>
+						<svg width="1000" height="200"></svg>
 					</div>
-					<div class="row" id="ret_chart" hidden="true">
-					<svg id=linechart width="960" height="500"></svg>
+					<br><br>
+					<div class="row" id="comparison_tbl" hidden="true">
 					</div>
 				</div>
             </div>
@@ -292,118 +508,216 @@
   <input name="animation" type="hidden">
 
 	<script>
-		function calc_total() {
-			var alloc1 = parseInt(document.getElementById("your_alloc1").value, 10);
-			var alloc2 = parseInt(document.getElementById("your_alloc2").value, 10);
-			var alloc3 = parseInt(document.getElementById("your_alloc3").value, 10);
+		function calc_total(item)
+		{
+
+			if (parseInt(item.value) > parseInt(item.max))
+			{
+				item.value = item.defaultValue;
+				return false;
+			}
+
 			var total = 0;
+		    for(count = 1; count <= 15; count++)
+		    {
+		    	var alloc = parseInt(document.getElementById("your_alloc" + count.toString()).value, 10);
+		    	if(!isNaN(alloc))
+					total += alloc;
+            }
+            if (total == 100)
+            	document.getElementById("error_msg").innerText = "";
 
-			if(!isNaN(alloc1))
-				total += alloc1;
-			if(!isNaN(alloc2))
-				total += alloc2;
-			if(!isNaN(alloc3))
-				total += alloc3;
-
-			document.getElementById("total_alloc").value = total;
+            if (total > item.max)
+            {
+            	item.value = item.defaultValue;
+            	return false;
+            }
+            else
+            {
+            	item.defaultValue = item.value;
+				document.getElementById("total_alloc").value = total;
+			}
+			return true;
 		}
-		function optimize() {
-			document.getElementById("opt_alloc1").value = 30;
-			document.getElementById("opt_alloc2").value = 45;
-			document.getElementById("opt_alloc3").value = 25;
-			document.getElementById("summary_btn").disabled = false;
+
+		function optimize()
+		{
+			var total = parseInt(document.getElementById("total_alloc").value);
+			if (isNaN(total) || total != 100)
+			{
+				document.getElementById("error_msg").innerText = "Total Allocation must be 100%.";
+				return false;
+			}
+
+			document.getElementById("optimized_port").hidden = true;
+			document.getElementById("comparison_tbl").hidden = true;
+			document.getElementById("loading").hidden = false;
+			document.getElementById("error_msg").innerText = "";
+
+			var ret = document.getElementById("ret")[document.getElementById("ret").selectedIndex].value;
+
+			var asset_str = "";
+			for(count = 1; count <= 15; count++)
+		    {
+		    	var asset = document.getElementById("asset"+count.toString())[document.getElementById("asset"+count.toString()).selectedIndex].value;
+		    	var alloc = document.getElementById("your_alloc" + count.toString()).value;
+				asset_str += "&asset" + count.toString() + "=" + asset + "&your_alloc" + count.toString() + "=" + alloc
+            }
+
+			load_optimized_port("/opti?ret="+ret+asset_str+"&out=optimized_port");
+			load_comparison_tbl("/opti?ret="+ret+asset_str+"&out=comparison_tbl");
 		}
 
-		function scroll() {
-			document.getElementById("ret_summary").hidden = false;
-			document.getElementById("ret_chart").hidden = false;
-			var top = document.getElementById("ret_summary").offsetTop; //Getting Y of target element
-    		window.scrollTo(0, top-60);
+		function scroll()
+		{
+			var top = document.getElementById("optimized_port").offsetTop; //Getting Y of target element
+    		window.scrollTo(0, top-100);
 		}
 	</script>
 
 	<script>
+		var svg = d3.select('#optimized_port').select("svg"),
+			margin = {top: 20, right: 20, bottom: 30, left: 40},
+			width = +svg.attr("width") - margin.left - margin.right,
+			height = +svg.attr("height") - margin.top - margin.bottom;
+		var g = svg.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var svg = d3.select("#linechart"),
-		margin = {top: 20, right: 80, bottom: 30, left: 50},
-		width = svg.attr("width") - margin.left - margin.right,
-		height = svg.attr("height") - margin.top - margin.bottom,
-		g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		var xAxisSel = g.append("g")
+							.attr("class", "axis axis--x")
+							.attr("transform", "translate(0," + (height) + ")" );
+		var yAxisSel = g.append("g")
+							.attr("class", "axis axis--y");
 
-	var parseTime = d3.timeParse("%Y%m%d");
+		var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+		var y = d3.scaleLinear().rangeRound([height, 0]);
+		var current_data = null;
 
-	var x = d3.scaleTime().range([0, width]),
-		y = d3.scaleLinear().range([height, 0]),
-		z = d3.scaleOrdinal(d3.schemeCategory10);
+		var tip = d3.tip()
+		  .attr('class', 'd3-tip')
+		  .offset([-10, 0])
+		  .html(function(d) {
+			return "<strong>Allocation(%):</strong> <span style='color:red'>" + d.allocation + "</span>";
+		  });
 
-	var line = d3.line()
-		.curve(d3.curveBasis)
-		.x(function(d) { return x(d.x); })
-		.y(function(d) { return y(d.y); });
+		svg.call(tip);
 
-	d3.tsv("/api/get_optimized_returns", type, function(error, data) {
-	  if (error) throw error;
+		function changetip(hide, d)
+		{
+			if (hide)
+			{
+				tip.hide(d);
+			}
+			else
+			{
+				tip.show(d);
+			}
+		}
 
-	  var groups = data.columns.slice(1).map(function(id) {
-		return {
-		  id: id,
-		  values: data.map(function(d) {
-			return {x: d.date, y: d[id]};
-		  })
-		};
-	  });
+		function update(data)
+		{
+			//draw axis
+			x.domain(data.map(function(d) { return d.asset; }));
+			y.domain([0, d3.max(data, function(d) { return d.allocation; })]);
+			xAxisSel.call(d3.axisBottom().scale(x));
+			yAxisSel.call(d3.axisLeft().scale(y));
 
-	  x.domain(d3.extent(data, function(d) { return d.date; }));
+			//remove current bars
+			if (current_data != null)
+			{
+				var current_bars = g.selectAll(".bar");
+				current_bars.remove();
+			}
 
-	  y.domain([
-		d3.min(groups, function(c) { return d3.min(c.values, function(d) { return d.y; }); }),
-		d3.max(groups, function(c) { return d3.max(c.values, function(d) { return d.y; }); })
-	  ]);
+			//init
+			var bars = g.selectAll(".bar").data(data, function(d) { return d.asset; });
 
-	  z.domain(groups.map(function(c) { return c.id; }));
+			//enter
+			bars.enter().append("rect")
+				.attr("class", "bar")
+				.attr("x", function(d) { return x(d.asset); })
+				.attr("width", x.bandwidth())
+				.attr("y", function(d) { return y(d.allocation); })
+				.on('mouseover', function(d) {changetip(false, d);})
+				.on('mouseout', function(d) {changetip(true, d);})
+				.transition().duration(1000)
+				.attr("height", function(d) { return height - y(d.allocation); });
 
-	  g.append("g")
-		  .attr("class", "axis axis--x")
-		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x));
+			//exit
+			bars.exit().remove();
+		}
 
-	  g.append("g")
-		  .attr("class", "axis axis--y")
-		  .call(d3.axisLeft(y))
-		.append("text")
-		  .attr("transform", "rotate(-90)")
-		  .attr("y", 6)
-		  .attr("dy", "0.71em")
-		  .attr("fill", "#000")
-		  .text("Return, %");
-
-	  var group = g.selectAll(".group")
-		.data(groups)
-		.enter().append("g")
-		.attr("class", "group");
-
-	  group.append("path")
-		  .attr("class", "line")
-		  .attr("d", function(d) { return line(d.values); })
-		  .style("stroke", function(d) { return z(d.id); });
-
-	  group.append("text")
-		  .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
-		  .attr("transform", function(d) { return "translate(" + x(d.value.x) + "," + y(d.value.y) + ")"; })
-		  .attr("x", 3)
-		  .attr("dy", "0.35em")
-		  .style("font", "8px sans-serif")
-		  .style("font-weight", "bold")
-		  .text(function(d) { return d.id; });
-	});
-
-	function type(d, _, columns) {
-	  d.date = parseTime(d.date);
-	  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
-	  return d;
-	}
-
+		function load_optimized_port(file)
+		{
+			d3.tsv
+			(		file,
+					function(d)
+					{
+					  d.allocation = +d.allocation;
+					  return d;
+					},
+					function(error, data)
+					{
+					  if (error) throw error;
+					  update(data);
+					  current_data = data;
+					  document.getElementById("optimized_port").hidden = false;
+					}
+			);
+		}
 	</script>
-  
+
+	<script>
+		var tabulate = function (data,columns)
+		{
+			var oldtable = d3.select('#comparison_tbl').selectAll('table')
+			if (oldtable != null)
+				oldtable.remove()
+
+			var table = d3.select('#comparison_tbl').append('table').attr("class", "table table-striped")
+			var thead = table.append('thead')
+			var tbody = table.append('tbody')
+
+			thead.append('tr')
+			  .selectAll('th')
+				.data(columns)
+				.enter()
+			    .append('th')
+				.text(function (d) { return d })
+
+			var rows = tbody.selectAll('tr')
+				.data(data)
+				.enter()
+			    .append('tr')
+
+			var cells = rows.selectAll('td')
+				.data(function(row) {
+					return columns.map(function (column) {
+						return { column: column, value: row[column] }
+				  })
+			    })
+			    .enter()
+			    .append('td')
+			    .text(function (d) { return d.value })
+
+			return table;
+		}
+
+		function load_comparison_tbl(file)
+		{
+			d3.tsv
+			(		file,
+					function(error, data)
+					{
+					  if (error) throw error;
+					  var columns = ['Portfolio', 'Cumulative Return(%)', 'Max. Volatility', 'Max. Drawdown', 'Max. Sharpe']
+					  tabulate(data,columns)
+					  document.getElementById("comparison_tbl").hidden = false;
+					  document.getElementById("loading").hidden = true;
+					  scroll();
+					}
+			);
+		}
+	</script>
   </body>
 </html>
