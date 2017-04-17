@@ -30,7 +30,7 @@
     <style>
       rect {
           stroke: lightgray;
-          stoke-width: 1px;
+          stroke-width: 1px;
           fill: none;
       }
 
@@ -40,18 +40,15 @@
         font-weight: bold;
       }
 
-      .y.axis path{
-        fill: none;
-        stroke: none;
-      }
-
 	.d3-tip {
 	  line-height: 1;
-	  font-weight: bold;
-	  padding: 12px;
+	  padding: 3px;
 	  background: rgba(0, 0, 0, 0.8);
 	  color: #fff;
-	  border-radius: 2px;
+	  border-radius: 1px;
+	  text-align: center;
+	  font: 10px sans-serif;
+	  font-weight: bold;
 	}
 
 	/* Creates a small triangle extender for the tooltip */
@@ -74,6 +71,21 @@
 	  left: 0;
 	}
 
+	.axis path,
+	.axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+	.axis {
+	  font: 12px sans-serif;
+	  font-weight: normal;
+	}
+
+	.dot {
+	  stroke: #000;
+	  stroke-width: 0px;
+	}
   </style>
 
 </head>
@@ -119,7 +131,7 @@
 
         <div class="container">
             <div class="row">
-                <div id="chart" class="mbr-section col-md-10">
+                <div id="notchart" class="mbr-section col-md-10">
                     <p class="mbr-section-lead lead">Asset Correlation</p>
 					<div class="row">
 						<div class="col-xs-4 col-md-4">
@@ -145,12 +157,13 @@
                             <button class="btn btn-primary" id="recalculate">Recalculate Correlations</button>
 						</div>
 					</div>
+					<div id="chart" class="row"></div>
+					<div id="riskChart" class="row"></div>
                     <script src="assets/custom/correlationMatrix.js"></script>
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 
 <footer class="mbr-small-footer mbr-section mbr-section-nopadding" id="footer1-k" style="background-color: rgb(50, 50, 50); padding-top: 1.75rem; padding-bottom: 1.75rem;">

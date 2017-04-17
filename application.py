@@ -72,8 +72,69 @@ class CorrelationAPI(Resource):
             writer.writerow(tuple([assetNames[x]]) + corr[x])
         print('Correlation API return')
         return Response(dest.getvalue(), mimetype="text")
-
-
+    
+class ScatterplotAPI(Resource):
+    def get(self):
+        dp = lambda x: dateparser.parse(x).strftime('%Y-%m-%d')
+        
+        parser = reqparse.RequestParser()
+        parser.add_argument('startDate', type=str)
+        parser.add_argument('endDate', type=str)
+        args = parser.parse_args()
+        
+        conn = sqlite3.connect('data/data.db')
+        c = conn.cursor()
+        
+        data = c.execute("""
+                 SELECT gold, preferred, igcorp, hycorp, leveragedloan, emerging,
+                 realestate, mediumtreasury, longtreasury, tips, commodities, developedexus,
+                 largecap, midcap, smallcap
+                 FROM returns
+                 WHERE date BETWEEN ? AND ?
+                 """, (dp(args.startDate), dp(args.endDate))).fetchall()
+        
+        if not data:
+            abort(400)
+        else:
+            print(data[0])
+        sp = []
+        for x in range(len(data[0])):
+            row = []
+            row.append(np.mean([ret[x] for ret in data]) * 260 * 100)
+            row.append(np.std([ret[x] for ret in data]) * np.sqrt(260) * 100)
+            sp.append(tuple(row))
+        assetNames = ("Gold", "Pref Eq", "IG Corps", "HY Corps",
+              "Bank Loans", "Emerging Eq", "Real Estate", "Medium Treas",
+              "Long Treas", "TIPS", "Commodities", "Dev Int Eq",
+              "LargeCap Eq", "MidCap Eq", "SmallCap Eq")
+        dest = io.BytesIO()
+        writer = csv.writer(dest)
+        writer.writerow(("asset", "mean", "std", "category"))
+        for x in range(len(sp)):
+            writer.writerow(tuple([assetNames[x]]) + sp[x] + tuple([self.getCategory(assetNames[x])]))
+        print('Scatterplot API return')
+        return Response(dest.getvalue(), mimetype="text")
+    
+    @staticmethod
+    def getCategory(assetName):
+        categories = dict()
+        categories['Gold'] = 'Commodities'
+        categories['Commodities'] = 'Commodities'
+        categories['Pref Eq'] = 'Equity'
+        categories['IG Corps'] = 'Corporate Debt'
+        categories['HY Corps'] = 'Corporate Debt'
+        categories['Bank Loans'] = 'Corporate Debt'
+        categories['Emerging Eq'] = 'Equity'
+        categories['Real Estate'] = 'Real Estate'
+        categories['Medium Treas'] = 'Treasuries'
+        categories['Long Treas'] = 'Treasuries'
+        categories['TIPS'] = 'Treasuries'
+        categories['Dev Int Eq'] = 'Equity'
+        categories['LargeCap Eq'] = 'Equity'
+        categories['MidCap Eq'] = 'Equity'
+        categories['SmallCap Eq'] = 'Equity'
+        return categories[assetName]
+        
 class PerformanceAPI(Resource):
     @staticmethod
     def get_weights(portName):
@@ -581,6 +642,7 @@ api.add_resource(HelloWorld, '/hello')
 api.add_resource(CorrelationAPI, '/corr')
 api.add_resource(PerformanceAPI, '/perf')
 api.add_resource(OptimizationAPI, '/opti')
+api.add_resource(ScatterplotAPI, '/scatter')
 
 @app.route('/')
 @app.route('/index.html')
