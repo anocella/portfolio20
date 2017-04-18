@@ -72,19 +72,20 @@ class CorrelationAPI(Resource):
             writer.writerow(tuple([assetNames[x]]) + corr[x])
         print('Correlation API return')
         return Response(dest.getvalue(), mimetype="text")
-    
+
+
 class ScatterplotAPI(Resource):
     def get(self):
         dp = lambda x: dateparser.parse(x).strftime('%Y-%m-%d')
-        
+
         parser = reqparse.RequestParser()
         parser.add_argument('startDate', type=str)
         parser.add_argument('endDate', type=str)
         args = parser.parse_args()
-        
+
         conn = sqlite3.connect('data/data.db')
         c = conn.cursor()
-        
+
         data = c.execute("""
                  SELECT gold, preferred, igcorp, hycorp, leveragedloan, emerging,
                  realestate, mediumtreasury, longtreasury, tips, commodities, developedexus,
@@ -92,7 +93,7 @@ class ScatterplotAPI(Resource):
                  FROM returns
                  WHERE date BETWEEN ? AND ?
                  """, (dp(args.startDate), dp(args.endDate))).fetchall()
-        
+
         if not data:
             abort(400)
         else:
@@ -104,9 +105,9 @@ class ScatterplotAPI(Resource):
             row.append(np.std([ret[x] for ret in data]) * np.sqrt(260) * 100)
             sp.append(tuple(row))
         assetNames = ("Gold", "Pref Eq", "IG Corps", "HY Corps",
-              "Bank Loans", "Emerging Eq", "Real Estate", "Medium Treas",
-              "Long Treas", "TIPS", "Commodities", "Dev Int Eq",
-              "LargeCap Eq", "MidCap Eq", "SmallCap Eq")
+                      "Bank Loans", "Emerging Eq", "Real Estate", "Medium Treas",
+                      "Long Treas", "TIPS", "Commodities", "Dev Int Eq",
+                      "LargeCap Eq", "MidCap Eq", "SmallCap Eq")
         dest = io.BytesIO()
         writer = csv.writer(dest)
         writer.writerow(("asset", "mean", "std", "category"))
@@ -114,7 +115,7 @@ class ScatterplotAPI(Resource):
             writer.writerow(tuple([assetNames[x]]) + sp[x] + tuple([self.getCategory(assetNames[x])]))
         print('Scatterplot API return')
         return Response(dest.getvalue(), mimetype="text")
-    
+
     @staticmethod
     def getCategory(assetName):
         categories = dict()
@@ -134,7 +135,8 @@ class ScatterplotAPI(Resource):
         categories['MidCap Eq'] = 'Equity'
         categories['SmallCap Eq'] = 'Equity'
         return categories[assetName]
-        
+
+
 class PerformanceAPI(Resource):
     @staticmethod
     def get_weights(portName):
@@ -272,50 +274,6 @@ class PerformanceAPI(Resource):
         return portfolio_returns
 
     @staticmethod
-    def create_6040_weights():
-        # 60% stocks, 40% bonds
-        stocks = .6
-        bonds = .4
-
-        # stocks
-        smallcap = .1
-        midcap = .3
-        largecap = .6
-
-        # bonds
-        igcorp = .5
-        longT = .25
-        medT = .25
-
-        weights = {
-            u'Gold': .0,
-            u'Preferred': .0,
-            u'IGCorp': igcorp * bonds,
-            u'HYCorp': .0,
-            u'LevLoan': .0,
-            u'Emerging': .0,
-            u'RealEstate': .0,
-            u'MedTreas': medT * bonds,
-            u'LongTreas': longT * bonds,
-            u'TIPS': .0,
-            u'GSCI': .0,
-            u'DevXUS': .0,
-            u'LargeCap': largecap * stocks,
-            u'MidCap': midcap * stocks,
-            u'SmallCap': smallcap * stocks,
-        }
-        return weights
-
-    @staticmethod
-    def create_6040_portfolio(asset_returns, begin=None, end=None):
-
-        weights = PerformanceAPI.create_6040_weights()
-        omega = pd.Series(weights)
-        omega = PerformanceAPI.add_libor(omega)
-
-        return PerformanceAPI.create_portfolio(asset_returns, omega, begin, end)
-
-    @staticmethod
     def generate_portfolio_nav(portfolio_returns, begin_nav=100):
         return (portfolio_returns + 1).cumprod() * begin_nav
 
@@ -372,29 +330,6 @@ class PerformanceAPI(Resource):
 
         return pd.concat([port1, port2], axis=1)
 
-    @staticmethod
-    def add_60_40(asset_returns, my_port, name=None):
-        begin = my_port.index[0]
-        end = my_port.index[-1]
-        weights = PerformanceAPI.create_6040_weights()
-        begin_nav = my_port['NAV'][0] / (1 + my_port['Return'][0])
-
-        port6040 = PerformanceAPI.generate_performance_measures(asset_returns, weights, begin=begin, end=end,
-                                                                begin_nav=begin_nav)
-
-        keys = port6040.columns
-        values = 'port6040_' + keys
-        port6040 = port6040.rename(
-            columns=dict(zip(keys, values)))
-
-        if name:
-            keys = my_port.columns
-            values = name + '_' + keys
-            my_port = my_port.rename(
-                columns=dict(zip(keys, values)))
-
-        return pd.concat([my_port, port6040], axis=1)
-
     def get(self):
         print('Performance API')
         dp = lambda x: dateparser.parse(x).strftime('%Y-%m-%d')
@@ -433,18 +368,17 @@ class PerformanceAPI(Resource):
                                                              end=dp(args.endDate),
                                                              begin_nav=100)
         df = PerformanceAPI.combine_portfolios(port1, port2)
-        print df.columns
+        # print df.columns
 
         print('Performance API return')
         dest = io.BytesIO()
         df.to_csv(dest, encoding='utf-8')
-        print dest.getvalue()
+        # print dest.getvalue()
 
         return Response(dest.getvalue(), mimetype="text")
 
 
 class OptimizationAPI(Resource):
-
     @staticmethod
     def get_optimized_port(portName):
         # 60% stocks, 40% bonds
@@ -556,8 +490,8 @@ class OptimizationAPI(Resource):
         parser.add_argument('out', type=str)
 
         for i in range(1, 15):
-            parser.add_argument('asset'+str(i), type=str)
-            parser.add_argument('your_alloc'+str(i), type=str)
+            parser.add_argument('asset' + str(i), type=str)
+            parser.add_argument('your_alloc' + str(i), type=str)
         args = parser.parse_args()
 
         if args.ret == '10-years':
@@ -581,7 +515,7 @@ class OptimizationAPI(Resource):
             except ValueError:
                 val = 0.0
 
-            key = args['asset'+str(i)]
+            key = args['asset' + str(i)]
             if key == '':
                 continue
 
@@ -614,12 +548,12 @@ class OptimizationAPI(Resource):
             dest = StringIO.StringIO()
             dest.write("Portfolio\tCumulative Return(%)\tMax. Volatility\tMax. Drawdown\tMax. Sharpe\n")
             dest.write("Optimized Portfolio\t"
-                       + str(round(port1['Return'].sum()*100, 4)) + "\t"
+                       + str(round(port1['Return'].sum() * 100, 4)) + "\t"
                        + str(round(port1['Volatility'].max(), 4)) + "\t"
                        + str(round(port1['Drawdown'].min(), 4)) + "\t"
                        + str(round(port1['Sharpe'].max(), 4)) + "\n")
             dest.write("My Portfolio\t"
-                       + str(round(port2['Return'].sum()*100, 4)) + "\t"
+                       + str(round(port2['Return'].sum() * 100, 4)) + "\t"
                        + str(round(port2['Volatility'].max(), 4)) + "\t"
                        + str(round(port2['Drawdown'].min(), 4)) + "\t"
                        + str(round(port2['Sharpe'].max(), 4)) + "\n")
@@ -631,7 +565,7 @@ class OptimizationAPI(Resource):
             dest = StringIO.StringIO()
             dest.write("asset\tallocation\n")
             for key, value in optimized_port.iteritems():
-                dest.write(key + "\t" + "%.2f" % (value*100) + "\n")
+                dest.write(key + "\t" + "%.2f" % (value * 100) + "\n")
 
             print dest.getvalue()
             return Response(dest.getvalue(), mimetype="text")
@@ -642,6 +576,7 @@ api.add_resource(CorrelationAPI, '/corr')
 api.add_resource(PerformanceAPI, '/perf')
 api.add_resource(OptimizationAPI, '/opti')
 api.add_resource(ScatterplotAPI, '/scatter')
+
 
 @app.route('/')
 @app.route('/index.html')
@@ -668,9 +603,11 @@ def optimizer(name=None):
 def contact(name=None):
     return render_template('contact.html', name=name)
 
+
 @app.route('/datepicker.html')
 def datepicker(name=None):
     return render_template('datepicker.html', name=name)
+
 
 @app.route('/assets/<path:path>')
 def send_assets(path):
