@@ -353,7 +353,7 @@ class PerformanceAPI(Resource):
         if args.portName1 == 'my_port' and session['my_port'] is not None:
             weights1 = session['my_port']
         else:
-            weights1 = PerformanceAPI.get_weights(args.portName2)
+            weights1 = PerformanceAPI.get_weights(args.portName1)
 
         weights2 = PerformanceAPI.get_weights(args.portName2)
 
