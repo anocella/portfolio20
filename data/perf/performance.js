@@ -31,17 +31,20 @@ function perfCharts(port1, port2, dataUrl)
 		  formatDate = d3.time.format("%Y-%m-%d")
 
           dataset.map(function(d){
+          	if (d.port1_Volatility) {
+			  vol1.push([new Date(parseDate(d.Date)).getTime(),+d.port1_Volatility])
+			  vol2.push([new Date(parseDate(d.Date)).getTime(),+d.port2_Volatility])
+
+			  sr1.push([new Date(parseDate(d.Date)).getTime(),+d.port1_Sharpe])
+			  sr2.push([new Date(parseDate(d.Date)).getTime(),+d.port2_Sharpe])
+			}
+
               nav1.push([new Date(parseDate(d.Date)).getTime(),+d.port1_NAV])
 			  nav2.push([new Date(parseDate(d.Date)).getTime(),+d.port2_NAV])
 
 			  dd1.push([new Date(parseDate(d.Date)).getTime(),+d.port1_Drawdown])
 			  dd2.push([new Date(parseDate(d.Date)).getTime(),+d.port2_Drawdown])
 
-			  vol1.push([new Date(parseDate(d.Date)).getTime(),+d.port1_Volatility])
-			  vol2.push([new Date(parseDate(d.Date)).getTime(),+d.port2_Volatility])
-
-			  sr1.push([new Date(parseDate(d.Date)).getTime(),+d.port1_Sharpe])
-			  sr2.push([new Date(parseDate(d.Date)).getTime(),+d.port2_Sharpe])
           });
 			Highcharts.stockChart('nav', {
 				rangeSelector: {
@@ -103,7 +106,7 @@ function perfCharts(port1, port2, dataUrl)
 				},
 
 				title: {
-					text: 'Portfolio Volatility'
+					text: '12-month rolling portfolio volatility'
 				},
 				xAxis: {
 					type: 'datetime'
@@ -130,7 +133,7 @@ function perfCharts(port1, port2, dataUrl)
 				},
 
 				title: {
-					text: 'Sharpe Ratio'
+					text: '12-month rolling sharpe ratio'
 				},
 				xAxis: {
 					type: 'datetime'
