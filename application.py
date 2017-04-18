@@ -341,10 +341,10 @@ class PerformanceAPI(Resource):
         parser.add_argument('portName2', type=str)
         args = parser.parse_args()
 
-        print(dp(args.startDate))
-        print(dp(args.endDate))
-        print(args.portName1)
-        print(args.portName2)
+        print('Start date: {}'.format(dp(args.startDate)))
+        print('End date: {}'.format(dp(args.endDate)))
+        print('Portfolio 1: {}'.format(args.portName1))
+        print('Portfolio 2: {}'.format(args.portName2))
 
         cnx = sqlite3.connect('data/perf/portfolio_data.db')
         asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
@@ -373,8 +373,6 @@ class PerformanceAPI(Resource):
         print('Performance API return')
         dest = io.BytesIO()
         df.to_csv(dest, encoding='utf-8')
-        # print dest.getvalue()
-
         return Response(dest.getvalue(), mimetype="text")
 
 

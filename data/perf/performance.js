@@ -48,7 +48,7 @@ function perfCharts(port1, port2, dataUrl)
           });
 			Highcharts.stockChart('nav', {
 				rangeSelector: {
-					selected: 1
+					selected: 5
 				},
 
 				title: {
@@ -75,7 +75,7 @@ function perfCharts(port1, port2, dataUrl)
 
 			Highcharts.stockChart('drawdown', {
 				rangeSelector: {
-					selected: 1
+					selected: 5
 				},
 
 				title: {
@@ -94,6 +94,7 @@ function perfCharts(port1, port2, dataUrl)
 				{
 					name: name2,
 					data: dd2,
+					color: '#f47742',
 					tooltip: {
 						valueDecimals: 2
 					}
@@ -102,7 +103,7 @@ function perfCharts(port1, port2, dataUrl)
 
 			Highcharts.stockChart('volatility', {
 				rangeSelector: {
-					selected: 1
+					selected: 5
 				},
 
 				title: {
@@ -129,7 +130,7 @@ function perfCharts(port1, port2, dataUrl)
 
 			Highcharts.stockChart('sharpe', {
 				rangeSelector: {
-					selected: 1
+					selected: 5
 				},
 
 				title: {
