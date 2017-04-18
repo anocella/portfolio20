@@ -416,10 +416,10 @@ class PerformanceAPI(Resource):
         asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
 
         # get your port from session object
-        if args.portName1 == 'my_port':
+        if args.portName1 == 'my_port' and session['my_port'] is not None:
             weights1 = session['my_port']
         else:
-            weights1 = PerformanceAPI.get_weights(args.portName1)
+            weights1 = PerformanceAPI.get_weights(args.portName2)
 
         weights2 = PerformanceAPI.get_weights(args.portName2)
 
