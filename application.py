@@ -325,19 +325,18 @@ class PerformanceAPI(Resource):
         # return pd.rolling_std(returns, window=window)*math.sqrt(252)
 
     @staticmethod
-    def portfolio_drawdown(portfolio_returns, begin_nav=100):
-        nav = PerformanceAPI.generate_portfolio_nav(portfolio_returns, begin_nav)
+    def portfolio_drawdown(portfolio_returns):
+        nav = (portfolio_returns + 1).cumprod()
+        max_nav = nav.expanding(min_periods=1).max()
         bDate = nav.index[0]
-        dd = pd.Series(begin_nav, index=[bDate])
-        for date in nav.index:
-            if date <= bDate:
-                pass
-            if nav.loc[date] >= max(nav.loc[bDate:date]):
-                dd.set_value(date, begin_nav)
-            else:
+        dd = pd.Series(1., index=[bDate])
+        for date in nav.index[1:]:
+            if nav.loc[date] < max_nav.loc[date]:
                 loc = nav.index.get_loc(date)
-                dd.set_value(date, dd.iloc[-1] * nav.iloc[loc] / nav.iloc[loc - 1])
-        return dd / 100.0 - 1.0
+                dd.set_value(date, dd.iloc[-1] * (portfolio_returns.iloc[loc] + 1))
+            else:
+                dd.set_value(date, 1.)
+        return dd - 1.0
 
     @staticmethod
     def rolling_portfolio_sharpe_ratio(portfolio_returns, libor_returns, window=252):
