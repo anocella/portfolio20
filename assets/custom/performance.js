@@ -78,7 +78,7 @@ function perfCharts(port1, port2, dataUrl)
 					text: 'Growth of $100'
 				},
 				xAxis: {
-					type: 'datetime'
+					type: 'datetime',
 				},
 				tooltip: {
                     pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>',
@@ -91,7 +91,14 @@ function perfCharts(port1, port2, dataUrl)
 					formatter: function(){
 					  return '$' + this.value;
 					}
-				  }
+				  },
+                    title: {
+                        align: 'high',
+                        offset: 10,
+                        text: 'Cumulative<br/>  Return',
+                        rotation: 0,
+                        y: -30
+                    }
 				},
 				legend: {
                     enabled: true,
@@ -161,12 +168,21 @@ function perfCharts(port1, port2, dataUrl)
 				},
 				yAxis: {
 				  allowDecimals: true,
+				  //showFirstLabel: true,
+				  showLastLabel: true,
 				  labels: {
 				  	align:'left',
 					formatter: function(){
 					  return this.value*100 + '%'
 					}
-				  }
+				  },
+                    title: {
+                        align: 'high',
+                        offset: 10,
+                        text: 'Portfolio<br/>Drawdown',
+                        rotation: 0,
+                        y: -30
+                    }
 				},
 				legend: {
                     enabled: true,
@@ -241,7 +257,14 @@ function perfCharts(port1, port2, dataUrl)
 					formatter: function(){
 					  return this.value*100 + '%'
 					}
-				  }
+				  },
+                    title: {
+                        align: 'high',
+                        offset: 10,
+                        text: 'Portfolio<br/>Volatility',
+                        rotation: 0,
+                        y: -30
+                    }
 				},
 				legend: {
                     enabled: true,
@@ -303,7 +326,14 @@ function perfCharts(port1, port2, dataUrl)
 					formatter: function(){
 					  return this.value
 					}
-				  }
+				  },
+                    title: {
+                        align: 'high',
+                        offset: 10,
+                        text: 'Sharpe<br/>Ratio',
+                        rotation: 0,
+                        y: -30
+                    }
 				},
 				legend: {
                     enabled: true,
