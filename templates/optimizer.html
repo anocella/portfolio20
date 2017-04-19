@@ -543,9 +543,9 @@
 		function optimize()
 		{
 			var total = parseInt(document.getElementById("total_alloc").value);
-			if (isNaN(total) || total != 100)
+			if (isNaN(total) || total > 100)
 			{
-				document.getElementById("error_msg").innerText = "Total Allocation must be 100%.";
+				document.getElementById("error_msg").innerText = "Total Allocation must be greater than 1 and less than 100%.";
 				return false;
 			}
 
