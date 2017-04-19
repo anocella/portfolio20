@@ -48,7 +48,30 @@ function perfCharts(port1, port2, dataUrl)
           });
 			Highcharts.stockChart('nav', {
 				rangeSelector: {
-					selected: 5
+					selected: 5,
+                    buttons: [{
+                        type: 'month',
+                        count: 6,
+                        text: '6m'
+                    }, {
+                        type: 'ytd',
+                        text: 'YTD'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+					    type: 'year',
+                        count: 3,
+                        text: '3y'
+                    }, {
+					    type: 'year',
+                        count: 5,
+                        text: '5y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }]
 				},
 
 				title: {
@@ -57,6 +80,9 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 						},
+				legend: {
+                    enabled: true,
+                },
 				series: [{
 					name: name1,
 					data: nav1,
@@ -75,7 +101,30 @@ function perfCharts(port1, port2, dataUrl)
 
 			Highcharts.stockChart('drawdown', {
 				rangeSelector: {
-					selected: 5
+					selected: 5,
+                    buttons: [{
+                        type: 'month',
+                        count: 6,
+                        text: '6m'
+                    }, {
+                        type: 'ytd',
+                        text: 'YTD'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+					    type: 'year',
+                        count: 3,
+                        text: '3y'
+                    }, {
+					    type: 'year',
+                        count: 5,
+                        text: '5y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }]
 				},
 
 				title: {
@@ -84,6 +133,9 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 						},
+				legend: {
+                    enabled: true,
+                },
 				series: [{
 					name: name1,
 					data: dd1,
@@ -94,7 +146,6 @@ function perfCharts(port1, port2, dataUrl)
 				{
 					name: name2,
 					data: dd2,
-					color: '#f47742',
 					tooltip: {
 						valueDecimals: 2
 					}
@@ -103,7 +154,30 @@ function perfCharts(port1, port2, dataUrl)
 
 			Highcharts.stockChart('volatility', {
 				rangeSelector: {
-					selected: 5
+					selected: 5,
+                    buttons: [{
+                        type: 'month',
+                        count: 6,
+                        text: '6m'
+                    }, {
+                        type: 'ytd',
+                        text: 'YTD'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+					    type: 'year',
+                        count: 3,
+                        text: '3y'
+                    }, {
+					    type: 'year',
+                        count: 5,
+                        text: '5y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }]
 				},
 
 				title: {
@@ -112,6 +186,9 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 						},
+				legend: {
+                    enabled: true,
+                },
 				series: [{
 					name: name1,
 					data: vol1,
@@ -130,7 +207,30 @@ function perfCharts(port1, port2, dataUrl)
 
 			Highcharts.stockChart('sharpe', {
 				rangeSelector: {
-					selected: 5
+					selected: 5,
+                    buttons: [{
+                        type: 'month',
+                        count: 6,
+                        text: '6m'
+                    }, {
+                        type: 'ytd',
+                        text: 'YTD'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+					    type: 'year',
+                        count: 3,
+                        text: '3y'
+                    }, {
+					    type: 'year',
+                        count: 5,
+                        text: '5y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }]
 				},
 
 				title: {
@@ -139,6 +239,9 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 						},
+				legend: {
+                    enabled: true,
+                },
 				series: [{
 					name: name1,
 					data: sr1,
