@@ -19,6 +19,7 @@ app.secret_key = 'very secret'
 api = Api(app)
 CORS(app)
 
+optimized_port_list = pd.read_csv("data/portfolio_optimization_results.csv")
 
 class HelloWorld(Resource):
     def get(self):
@@ -378,90 +379,9 @@ class PerformanceAPI(Resource):
 
 class OptimizationAPI(Resource):
     @staticmethod
-    def get_optimized_port(portName):
-        # 60% stocks, 40% bonds
-        stocks = .6
-        bonds = .4
+    def get_optimized_port(years):
 
-        # stocks
-        smallcap = .1
-        midcap = .3
-        largecap = .6
-
-        # bonds
-        igcorp = .5
-        longT = .25
-        medT = .25
-        all_weights = {
-            u'10-years': {
-                u'Gold': .2,
-                u'Preferred': .2,
-                u'IGCorp': .1,
-                u'HYCorp': .2,
-                u'LevLoan': .05,
-                u'Emerging': .15,
-                u'RealEstate': 0,
-                u'MedTreas': 0,
-                u'LongTreas': 0,
-                u'TIPS': 0,
-                u'GSCI': 0,
-                u'DevXUS': 0,
-                u'LargeCap': 0,
-                u'MidCap': 0,
-                u'SmallCap': 0,
-            },
-            u'5-years': {
-                u'Gold': .05,
-                u'Preferred': .05,
-                u'IGCorp': .05,
-                u'HYCorp': .05,
-                u'LevLoan': .05,
-                u'Emerging': .05,
-                u'RealEstate': .05,
-                u'MedTreas': .05,
-                u'LongTreas': .05,
-                u'TIPS': .15,
-                u'GSCI': .05,
-                u'DevXUS': .05,
-                u'LargeCap': .1,
-                u'MidCap': .05,
-                u'SmallCap': .05,
-            },
-            u'3-years': {
-                u'Gold': .0,
-                u'Preferred': .0,
-                u'IGCorp': igcorp * bonds,
-                u'HYCorp': .0,
-                u'LevLoan': .0,
-                u'Emerging': .0,
-                u'RealEstate': .0,
-                u'MedTreas': medT * bonds,
-                u'LongTreas': longT * bonds,
-                u'TIPS': .0,
-                u'GSCI': .0,
-                u'DevXUS': .0,
-                u'LargeCap': largecap * stocks,
-                u'MidCap': midcap * stocks,
-                u'SmallCap': smallcap * stocks,
-            },
-            u'1-year': {
-                u'Gold': .0,
-                u'Preferred': .0,
-                u'IGCorp': igcorp * bonds,
-                u'HYCorp': .0,
-                u'LevLoan': .0,
-                u'Emerging': .0,
-                u'RealEstate': .0,
-                u'MedTreas': medT * bonds,
-                u'LongTreas': longT * bonds,
-                u'TIPS': .0,
-                u'GSCI': .0,
-                u'DevXUS': .0,
-                u'LargeCap': largecap * stocks,
-                u'MidCap': midcap * stocks,
-                u'SmallCap': smallcap * stocks,
-            },
-            u'cash': {
+        optimized_port = {
                 u'Gold': .0,
                 u'Preferred': .0,
                 u'IGCorp': .0,
@@ -477,9 +397,15 @@ class OptimizationAPI(Resource):
                 u'LargeCap': .0,
                 u'MidCap': .0,
                 u'SmallCap': .0,
-            },
         }
-        return all_weights[portName]
+        p = optimized_port_list[optimized_port_list['Years'] == years]
+
+        if p.shape[0] > 0:
+            for key in optimized_port:
+                if p.iloc[0][key] is not None:
+                    optimized_port[key] = p.iloc[0][key]
+
+        return optimized_port
 
     def get(self):
 
@@ -493,20 +419,24 @@ class OptimizationAPI(Resource):
         args = parser.parse_args()
 
         if args.ret == '10-years':
+            years = 10
             sd = '2007-03-31'
             ed = '2017-03-31'
         elif args.ret == '5-years':
+            years = 5
             sd = '2012-03-31'
             ed = '2017-03-31'
         elif args.ret == '3-years':
+            years = 3
             sd = '2014-03-31'
             ed = '2017-03-31'
         else:
+            years = 1
             sd = '2016-03-31'
             ed = '2017-03-31'
 
         # re-construct your portfolio dict
-        my_port = OptimizationAPI.get_optimized_port('cash')
+        my_port = OptimizationAPI.get_optimized_port(0)
         for i in range(1, 15):
             try:
                 val = float(args['your_alloc' + str(i)])
@@ -525,7 +455,7 @@ class OptimizationAPI(Resource):
         # store portfolio to the session object
         session['my_port'] = my_port
 
-        optimized_port = OptimizationAPI.get_optimized_port(args.ret)
+        optimized_port = OptimizationAPI.get_optimized_port(years)
 
         if args.out == 'comparison_tbl':
             cnx = sqlite3.connect('data/perf/portfolio_data.db')
