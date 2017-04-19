@@ -480,6 +480,7 @@
 					<br><br>
 					<div class="row" id="comparison_tbl" hidden="true">
 					</div>
+					<div style="text-align:center"><i id="loading_tbl" class="fa fa-spinner fa-pulse fa-2x fa-fw" hidden="true"></i></div>
 				</div>
             </div>
         </div>
@@ -545,7 +546,7 @@
 			var total = parseInt(document.getElementById("total_alloc").value);
 			if (isNaN(total) || total > 100)
 			{
-				document.getElementById("error_msg").innerText = "Total Allocation must be greater than 1 and less than 100%.";
+				document.getElementById("error_msg").innerText = "Total Allocation must be > 0 and <= 100%.";
 				return false;
 			}
 
@@ -553,6 +554,7 @@
 			document.getElementById("comparison_tbl").hidden = true;
 			document.getElementById("loading").hidden = false;
 			document.getElementById("error_msg").innerText = "";
+			document.getElementById("loading_tbl").hidden = false;
 
 			var ret = document.getElementById("ret")[document.getElementById("ret").selectedIndex].value;
 
@@ -714,6 +716,7 @@
 					  tabulate(data,columns)
 					  document.getElementById("comparison_tbl").hidden = false;
 					  document.getElementById("loading").hidden = true;
+					  document.getElementById("loading_tbl").hidden = true;
 					  scroll();
 					}
 			);
