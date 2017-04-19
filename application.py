@@ -257,6 +257,27 @@ class PerformanceAPI(Resource):
                 u'MidCap': .0,
                 u'SmallCap': .0,
             },
+            u'equal_weight': {
+                u'Gold': 0.2 / 2,
+                u'Preferred': .2 / 6,
+                u'IGCorp': .2 / 3,
+                u'HYCorp': .2 / 3,
+                u'LevLoan': .2 / 3,
+                u'Emerging': .2 / 6,
+                u'RealEstate': .2 / 1,
+                u'MedTreas': .2 / 3,
+                u'LongTreas': .2 / 3,
+                u'TIPS': .2 / 3,
+                u'GSCI': .2 / 2,
+                u'DevXUS': .2 / 6,
+                u'LargeCap': .2 / 6,
+                u'MidCap': .2 / 6,
+                u'SmallCap': .2 / 6,
+            },
+            u'optimized_10': OptimizationAPI.get_optimized_port(10),
+            u'optimized_5': OptimizationAPI.get_optimized_port(5),
+            u'optimized_3': OptimizationAPI.get_optimized_port(3),
+            u'optimized_1': OptimizationAPI.get_optimized_port(1)
         }
         return all_weights[portName]
 
@@ -432,7 +453,7 @@ class OptimizationAPI(Resource):
             ed = '2017-03-31'
         else:
             years = 1
-            sd = '2016-03-31'
+            sd = '2016-03-28' # Want to hit the minimum observation threshold
             ed = '2017-03-31'
 
         # re-construct your portfolio dict

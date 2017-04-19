@@ -66,6 +66,14 @@ function drawCorrelations(dataUrl) {
       svg.call(tip);
 
       svg.append("text").attr("x",0).attr("y",-25).attr("text-anchor", "start").text(document.getElementById("sd").value + " - " + document.getElementById("ed").value)
+      svg.append("text")
+        .attr("x",200)
+        .attr("y",-25)
+        .attr("font-size", "10px")
+        .attr("text-anchor", "start")
+        .attr("font-weight", "normal")
+        .attr("font-family", "sans-serif")
+        .text("Circle size measures correlation magnitude. Circle color changes with sign: positive correlations are progressively red, and negative correlations are progressively blue.")
 
       var cor = svg.selectAll(".cor")
         .data(data)
