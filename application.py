@@ -474,17 +474,17 @@ class OptimizationAPI(Resource):
             print(port1['Return'].sum())
             print(port2['Return'].sum())
             dest = StringIO.StringIO()
-            dest.write("Portfolio\tCumulative Return(%)\tMax. Volatility\tMax. Drawdown\tMax. Sharpe\n")
+            dest.write("Portfolio\tAnnualized Return(%)\tAvg. Volatility(%)\tMax. Drawdown(%)\tSharpe Ratio\n")
             dest.write("Optimized Portfolio\t"
-                       + str(round(port1['Return'].sum() * 100, 4)) + "\t"
-                       + str(round(port1['Volatility'].max(), 4)) + "\t"
-                       + str(round(port1['Drawdown'].min(), 4)) + "\t"
-                       + str(round(port1['Sharpe'].max(), 4)) + "\n")
+                       + str(round(((port1['Return']+1).prod()**(1./years)-1) * 100, 2)) + "\t"
+                       + str(round(port1['Volatility'].mean() * 100, 2)) + "\t"
+                       + str(round(port1['Drawdown'].min() * 100, 2)) + "\t"
+                       + str(round(((port1['Return'] + 1).prod() ** (1. / years) - 1) / port1['Volatility'].mean(), 2)) + "\n")
             dest.write("My Portfolio\t"
-                       + str(round(port2['Return'].sum() * 100, 4)) + "\t"
-                       + str(round(port2['Volatility'].max(), 4)) + "\t"
-                       + str(round(port2['Drawdown'].min(), 4)) + "\t"
-                       + str(round(port2['Sharpe'].max(), 4)) + "\n")
+                       + str(round(((port2['Return'] + 1).prod() ** (1. / years) - 1) * 100, 2)) + "\t"
+                       + str(round(port2['Volatility'].mean() * 100, 2)) + "\t"
+                       + str(round(port2['Drawdown'].min() * 100, 2)) + "\t"
+                       + str(round(((port2['Return'] + 1).prod() ** (1. / years) - 1)/port2['Volatility'].mean(), 2)) + "\n")
 
             print dest.getvalue()
             return Response(dest.getvalue(), mimetype="text")
