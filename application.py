@@ -453,7 +453,7 @@ class OptimizationAPI(Resource):
             ed = '2017-03-31'
         else:
             years = 1
-            sd = '2016-03-28' # Want to hit the minimum observation threshold
+            sd = '2016-03-21' # Want to hit the minimum observation threshold
             ed = '2017-03-31'
 
         # re-construct your portfolio dict
@@ -547,16 +547,13 @@ def performance(name=None):
 def optimizer(name=None):
     return render_template('optimizer.html', name=name)
 
-
-@app.route('/contact.html')
-def contact(name=None):
-    return render_template('contact.html', name=name)
-
+@app.route('/about.html')
+def about(name=None):
+    return render_template('about.html', name=name)
 
 @app.route('/datepicker.html')
 def datepicker(name=None):
     return render_template('datepicker.html', name=name)
-
 
 @app.route('/assets/<path:path>')
 def send_assets(path):
