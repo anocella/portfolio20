@@ -80,6 +80,10 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 				},
+				tooltip: {
+                    pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>',
+                    valuePrefix: '$'
+                },
 				yAxis: {
 				  allowDecimals: true,
 				  labels: {
@@ -139,6 +143,19 @@ function perfCharts(port1, port2, dataUrl)
 				title: {
 					text: 'Drawdown'
 				},
+				tooltip: {
+                    //pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+                    pointFormatter: function () {
+                        var s = '<span style="color:';
+                        s += this.color;
+                        s += '">\u25CF</span> ';
+                        s += this.series.name;
+                        s += ': <b>';
+                        s += Math.round(this.y*1000)/10;
+                        s += '%</b><br/>';
+                        return s;
+                    }
+                },
 				xAxis: {
 					type: 'datetime'
 				},
@@ -201,6 +218,19 @@ function perfCharts(port1, port2, dataUrl)
 				title: {
 					text: '12-month rolling portfolio volatility'
 				},
+				tooltip: {
+                    //pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+                    pointFormatter: function () {
+                        var s = '<span style="color:';
+                        s += this.color;
+                        s += '">\u25CF</span> ';
+                        s += this.series.name;
+                        s += ': <b>';
+                        s += Math.round(this.y*1000)/10;
+                        s += '%</b><br/>';
+                        return s;
+                    }
+                },
 				xAxis: {
 					type: 'datetime'
 						},
