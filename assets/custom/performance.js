@@ -79,7 +79,16 @@ function perfCharts(port1, port2, dataUrl)
 				},
 				xAxis: {
 					type: 'datetime'
-						},
+				},
+				yAxis: {
+				  allowDecimals: true,
+				  labels: {
+				  	align:'left',
+					formatter: function(){
+					  return '$' + this.value;
+					}
+				  }
+				},
 				legend: {
                     enabled: true,
                 },
@@ -132,7 +141,16 @@ function perfCharts(port1, port2, dataUrl)
 				},
 				xAxis: {
 					type: 'datetime'
-						},
+				},
+				yAxis: {
+				  allowDecimals: true,
+				  labels: {
+				  	align:'left',
+					formatter: function(){
+					  return this.value*100 + '%'
+					}
+				  }
+				},
 				legend: {
                     enabled: true,
                 },
@@ -186,6 +204,15 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 						},
+				yAxis: {
+				  allowDecimals: true,
+				  labels: {
+				  	align:'left',
+					formatter: function(){
+					  return this.value*100 + '%'
+					}
+				  }
+				},
 				legend: {
                     enabled: true,
                 },
@@ -239,6 +266,15 @@ function perfCharts(port1, port2, dataUrl)
 				xAxis: {
 					type: 'datetime'
 						},
+				yAxis: {
+				  allowDecimals: true,
+				  labels: {
+				  	align:'left',
+					formatter: function(){
+					  return this.value
+					}
+				  }
+				},
 				legend: {
                     enabled: true,
                 },
