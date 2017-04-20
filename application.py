@@ -437,7 +437,7 @@ class OptimizationAPI(Resource):
         parser.add_argument('ret', type=str)
         parser.add_argument('out', type=str)
 
-        for i in range(1, 15):
+        for i in range(1, 16):
             parser.add_argument('asset' + str(i), type=str)
             parser.add_argument('your_alloc' + str(i), type=str)
         args = parser.parse_args()
@@ -461,7 +461,7 @@ class OptimizationAPI(Resource):
 
         # re-construct your portfolio dict
         my_port = OptimizationAPI.get_optimized_port(0)
-        for i in range(1, 15):
+        for i in range(1, 16):
             try:
                 val = float(args['your_alloc' + str(i)])
             except ValueError:
@@ -478,6 +478,8 @@ class OptimizationAPI(Resource):
 
         # store portfolio to the session object
         session['my_port'] = my_port
+        
+        print(my_port)
 
         optimized_port = OptimizationAPI.get_optimized_port(years)
 
