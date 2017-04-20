@@ -86,6 +86,30 @@
 	  stroke: #000;
 	  stroke-width: 0px;
 	}
+
+	#explain {
+	  font-size: 14px;
+	  font-weight: normal;
+	  padding-top: 100px;
+	}
+
+	#assets {
+	  font: 12px sans-serif;
+	  font-weight: normal;
+	  padding-top: 100px;
+	}
+
+	#assets a {
+	  font-size: 14px;
+	}
+
+	#recalc {
+	  visibility: hidden;
+	}
+
+	.table td {
+	  padding: 0.2rem;
+	}
   </style>
 
 </head>
@@ -131,12 +155,13 @@
         <div class="container">
 			    <div class="row"><a href="#explain">Click here</a> for an explanation of how correlations, return, and risk factor into the portfolio construction process.</div>
 			    <div class="row"><a href="#assets">Click here</a> for more details about what the asset class labels mean.</div>
+			    <div class="row">&nbsp;</div>
             <div class="row">
-                <div id="notchart" class="mbr-section col-md-12">
-                    <p class="mbr-section-lead lead">Asset Correlation</p>
+                <!--div id="notchart" class="mbr-section col-md-12"-->
+                    <p class="mbr-section-lead lead" id="corrheader">Asset Correlation</p>
 					<div class="row">
-						<div class="col-xs-4 col-md-4">
-                            <label for="sd">Start Date:</label>
+						<div class="col-xs-4">
+                            <label for="sd">Start Date (earliest 03/31/2007):</label>
                             <div class="input-group date form_date" data-date="03/31/2007" data-date-format="mm/dd/yyyy" data-link-field="sd" data-link-format="mm/dd/yyyy">
                             <input class="form-control" size="16" type="text" value="03/31/2007" readonly>
                             <span class="input-group-addon"><span class="fa fa-times"></span></span>
@@ -144,8 +169,8 @@
                             </div>
                             <input type="hidden" id="sd" value="03/31/2007" /><br/>
 						</div>
-						<div class="col-xs-4 col-md-4">
-                            <label for="ed">End Date:</label>
+						<div class="col-xs-4">
+                            <label for="ed">End Date (latest 03/31/2017):</label>
                             <div class="input-group date form_date" data-date="03/31/2017" data-date-format="mm/dd/yyyy" data-link-field="ed" data-link-format="mm/dd/yyyy">
                             <input class="form-control" size="16" type="text" value="03/31/2017" readonly>
                             <span class="input-group-addon"><span class="fa fa-times"></span></span>
@@ -153,19 +178,120 @@
                             </div>
                             <input type="hidden" id="ed" value="03/31/2017" /><br/>
 						</div>
-                        <div class="col-xs-4 col-md-4">
-                            <label for="recalculate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <div class="col-xs-4">
+                            <label id="recalc">Recalculate Label</label>
                             <button class="btn btn-primary" id="recalculate">Recalculate Correlations</button>
 						</div>
 					</div>
-					<div id="chart" class="row"></div>
-					<div id="riskChart" class="row"></div>
+					<div id="chart" class="bootstrap-iso"></div>
+					<div id="riskChart" class="bootstrap-iso"></div>
                     <script src="assets/custom/correlationMatrix.js"></script>
-                </div>
+                <!--/div-->
             </div>
 
-        <div id="explain" class="row"><p><h2>Explanation</h2></p>This is a placeholder for the explanation.</div>
- 		<div id="assets" class="row">This is a placeholder for the asset class labels.</div>
+        <div id="explain" class="row"><p><h2>Our Process</h2></p>
+        <a href="#corrheader">Back to the visualization</a>
+        <p>This site is intended to be used as a tool for portfolio in the context of <a href="https://en.wikipedia.org/wiki/Modern_portfolio_theory">modern portfolio theory</a>, or MPT.
+        A major conclusion that comes from MPT is that an ideal portfolio either provides the best return for a given level of risk, or provides the lowest risk for a given level of return.
+        A very easy way to achieve lower risk is to combine multiple assets with similar levels of return, but low correlation to each other, so that the resulting portfolio is more efficient:
+        without much loss of expected return, we can greatly reduce our risk of not achieving that return.</p>
+        <p>Correlation measures the tendency for two assets to have above- or below-average returns simultaneously; high correlations are therefore bad for the portfolio because there is no
+        diversification when all of your assets do well or poorly at the same time. Adding assets that have a low or negative correlation to an existing portfolio make it more efficient, which
+        we measure with the Sharpe ratio. The Sharpe ratio is defined as the ratio of excess return (portfolio return less return on cash) to portfolio risk (measured as the standard deviation of returns).
+        There is one theoretical "best" portfolio that has the highest Sharpe ratio, and the goal of portfolio optimization is to estimate that portfolio.</p>
+        <p>We use daily returns for all of our calculations, and we express results in annualized terms where applicable. We annualize return by multiplying the daily value by 252, and we annualize
+        risk by multiplying the daily value by the square root of 252.</p>
+
+        </div>
+ 		<div id="assets" class="row"><p><h2>Our Asset Class Labels</h2></p>
+ 		  <a href="#corrheader">Back to the visualization</a>
+ 		  <table class="table table-striped" id="assettable">
+		    <thead>
+		      <tr>
+		        <th>Our Name</th>
+		        <th>Expanded Name</th>
+		        <th>Description</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr>
+		        <td>Gold</td>
+		        <td>Gold</td>
+		        <td>COMEX gold futures (investable return)</td>
+		      </tr>
+		      <tr>
+		        <td>Pref Eq</td>
+		        <td>Preferred Equity</td>
+		        <td>U.S. preferred stock (safer than common stock, riskier than corporate bonds)</td>
+		      </tr>
+		      <tr>
+		        <td>IG Corps</td>
+		        <td>U.S. Investment Grade Corporate Bonds</td>
+		        <td>Debt issued by corporations rated investment grade by S&P</td>
+		      </tr>
+		      <tr>
+		        <td>HY Corps</td>
+		        <td>U.S. High Yield Corporate Bonds</td>
+		        <td>Debt issued by corporations rated below investment grade by S&P</td>
+		      </tr>
+		      <tr>
+		        <td>Bank Loans</td>
+		        <td>U.S. Leveraged Loans</td>
+		        <td>Debt secured with a lien on a corporation's assets and rated below investment grade</td>
+		      </tr>
+		      <tr>
+		        <td>Emerging Eq</td>
+		        <td>Emerging Markets Equity</td>
+		        <td>Equity assets within emerging markets countries, measured in USD</td>
+		      </tr>
+		      <tr>
+		        <td>Real Estate</td>
+		        <td>U.S. Real Estate</td>
+		        <td>Real estate investment trusts (REITs) and other real estate companies</td>
+		      </tr>
+		      <tr>
+		        <td>Medium Treas</td>
+		        <td>Medium-term U.S. Treasury</td>
+		        <td>7-10 year U.S. Treasury securities</td>
+		      </tr>
+		      <tr>
+		        <td>Long Treas</td>
+		        <td>Long-term U.S. Treasury</td>
+		        <td>20+ year U.S. Treasury securities</td>
+		      </tr>
+		      <tr>
+		        <td>TIPS</td>
+		        <td>U.S. TIPS</td>
+		        <td>U.S. Treasury inflation-protected securities, all maturities</td>
+		      </tr>
+		      <tr>
+		        <td>Commodities</td>
+		        <td>S&P-Goldman Sachs Commodity Index</td>
+		        <td>First investable commodities index created</td>
+		      </tr>
+		      <tr>
+		        <td>Dev Int Eq</td>
+		        <td>Developed International Equity</td>
+		        <td>Equity assets within developed countries, ex-U.S., measured in USD</td>
+		      </tr>
+		      <tr>
+		        <td>LargeCap Eq</td>
+		        <td>U.S. Large Cap Equity</td>
+		        <td>S&P 500, stocks of largest 500 companies by market capitalization</td>
+		      </tr>
+		      <tr>
+		        <td>MidCap Eq</td>
+		        <td>U.S. Mid Cap Equity</td>
+		        <td>S&P 400, stocks of next largest 400 companies after S&P 500</td>
+		      </tr>
+		      <tr>
+		        <td>SmallCap Eq</td>
+		        <td>U.S. Small Cap Equity</td>
+		        <td>S&P 600, stocks of next largest 600 companies after S&P 400</td>
+		      </tr>
+		    </tbody>
+  		  </table>
+ 		</div>
         </div>
 
     </div>

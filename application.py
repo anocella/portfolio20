@@ -102,8 +102,8 @@ class ScatterplotAPI(Resource):
         sp = []
         for x in range(len(data[0])):
             row = []
-            row.append(np.mean([ret[x] for ret in data]) * 260 * 100)
-            row.append(np.std([ret[x] for ret in data]) * np.sqrt(260) * 100)
+            row.append(np.mean([ret[x] for ret in data]) * 252 * 100)
+            row.append(np.std([ret[x] for ret in data]) * np.sqrt(252) * 100)
             sp.append(tuple(row))
         assetNames = ("Gold", "Pref Eq", "IG Corps", "HY Corps",
                       "Bank Loans", "Emerging Eq", "Real Estate", "Medium Treas",
@@ -372,10 +372,13 @@ class PerformanceAPI(Resource):
         asset_returns = pd.read_sql_query('SELECT * FROM Returns', con=cnx, index_col='Date')
 
         # get your port from session object
-        if args.portName1 == 'my_port' and session['my_port'] is not None:
-            weights1 = session['my_port']
-        else:
-            weights1 = PerformanceAPI.get_weights(args.portName1)
+        try:
+            if args.portName1 == 'my_port' and session['my_port'] is not None:
+                weights1 = session['my_port']
+            else:
+                weights1 = PerformanceAPI.get_weights(args.portName1)
+        except:
+            weights1 = PerformanceAPI.get_weights('cash')
 
         weights2 = PerformanceAPI.get_weights(args.portName2)
 
