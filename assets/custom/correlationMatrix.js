@@ -40,7 +40,7 @@ function drawCorrelations(dataUrl) {
 		num = Math.sqrt(data.length),
 		color = d3.scale.linear()
 		  .domain([-1, 0, 1])
-		  .range([d3.hsl(240, .8, .5), d3.hsl(120, .5, .5), d3.hsl(0, .8, .5)]);
+		  .range([d3.hsl(240, .6, .45), d3.hsl(120, .5, .45), d3.hsl(0, .45, .55)]);
 
 	  var x = d3.scale
 		.ordinal()
